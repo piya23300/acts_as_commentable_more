@@ -1,0 +1,24 @@
+language: ruby
+rvm:
+  - 2.0.0
+env:
+  - DB=postgres
+
+sudo: true
+
+gemfile:
+  - Gemfile
+
+before_install:
+  - sh -c "if [ \"$DB\" = 'mysql' ]; then mysql   -e 'create database paper_trail_test;'; fi"
+  - sh -c "if [ \"$DB\" = 'mysql' ]; then mysql   -e 'create database paper_trail_bar; '; fi"
+  - sh -c "if [ \"$DB\" = 'mysql' ]; then mysql   -e 'create database paper_trail_foo; '; fi"
+  - sh -c "if [ \"$DB\" = 'postgres' ]; then psql -c 'create database paper_trail_test;' -U postgres; fi"
+  - sh -c "if [ \"$DB\" = 'postgres' ]; then psql -c 'create database paper_trail_bar;'  -U postgres; fi"
+  - sh -c "if [ \"$DB\" = 'postgres' ]; then psql -c 'create database paper_trail_foo;'  -U postgres; fi"
+  - cd test/dummy
+  - bundle exec bundle
+  - rake db:create
+  - rake db:migrate
+
+script: bundle exec rspec spec
