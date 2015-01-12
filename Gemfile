@@ -13,6 +13,8 @@ gemspec
 # To use debugger
 # gem 'debugger'
 
+gem "codeclimate-test-reporter", group: :test, require: nil
+
 group :development do
   gem 'bullet',         '4.13.2'
   gem 'spring',         '1.1.3'
