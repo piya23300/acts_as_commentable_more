@@ -32,6 +32,7 @@ group :development, :test do
   gem 'simplecov',              '0.9.0', require: false
   gem 'spring-commands-rspec',  '1.0.2'
   gem 'factory_girl_rails',     '4.4.1'
+  gem 'coveralls', require: false
 end
 
 group :test do
