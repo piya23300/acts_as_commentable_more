@@ -18,6 +18,7 @@ before_install:
   - sh -c "if [ \"$DB\" = 'postgres' ]; then psql -c 'create database paper_trail_foo;'  -U postgres; fi"
   - cd test/dummy
   - bundle install --path .bundle --binstubs
+  - cp config/database.travis.yml config/database.yml
   - bundle exec rake db:create
   - bundle exec rake db:migrate
 
