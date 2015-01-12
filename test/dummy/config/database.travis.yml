@@ -1,7 +1,7 @@
 defaults: &defaults
   adapter: postgresql
   encoding: unicode
-  database: onebox_core_test
+  database: acts_at_commentable_<%= Rails.env %>
   pool: 5
   username: postgres
   password:
