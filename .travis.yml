@@ -17,8 +17,8 @@ before_install:
   - sh -c "if [ \"$DB\" = 'postgres' ]; then psql -c 'create database paper_trail_bar;'  -U postgres; fi"
   - sh -c "if [ \"$DB\" = 'postgres' ]; then psql -c 'create database paper_trail_foo;'  -U postgres; fi"
   - cd test/dummy
-  - bundle exec bundle
-  - rake db:create
-  - rake db:migrate
+  - bundle install --path .bundle --binstubs
+  - bundle exec rake db:create
+  - bundle exec rake onebox_core:install
 
 script: bundle exec rspec spec
