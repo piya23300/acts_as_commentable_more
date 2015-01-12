@@ -1,5 +1,3 @@
 = ActsAsCommentableMore
 
-{<img src="https://travis-ci.org/piya23300/acts_as_commentable_more.svg?branch=develop" alt="Build Status" />}[https://travis-ci.org/piya23300/acts_as_commentable_more]
-
 This project rocks and uses MIT-LICENSE.
