@@ -1,30 +1,21 @@
 language: ruby
 rvm:
   - 2.0.0
-env:
-  - DB=postgres
+env: DB=postgres
 
 sudo: true
 
-gemfile:
-  - Gemfile
+gemfile: Gemfile
 
-env:
-  # - DB=sqlite
-  # - DB=mysql
-  - DB=postgresql
+env: DB=postgresql
 
-script:
-  - RAILS_ENV=test bundle exec rake db:migrate --trace
-  - bundle exec rake db:test:prepare
-  - bundle exec rspec spec
-  
 before_script:
   - cd test/dummy
   - cp config/database.travis.yml config/database.yml
   - bundle install
   - psql -c 'create database strano_test' -U postgres
   - bundle exec rake db:create
+  - RAILS_ENV=test bundle exec rake db:migrate --trace
+  - bundle exec rake db:test:prepare
 
-
-script: 
+script: bundle exec rspec spec
