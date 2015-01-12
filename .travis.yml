@@ -19,6 +19,6 @@ before_install:
   - cd test/dummy
   - bundle install --path .bundle --binstubs
   - bundle exec rake db:create
-  - bundle exec rake onebox_core:install
+  - bundle exec rake db:migrate
 
 script: bundle exec rspec spec
