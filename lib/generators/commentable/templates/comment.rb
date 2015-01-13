@@ -1,7 +1,5 @@
 class <%= class_name %> < ActiveRecord::Base
 
-  include ActsAsCommentable::Comment
-
   belongs_to :<%= class_name.demodulize.underscore + "able" %>, :polymorphic => true
 
   default_scope -> { order('created_at ASC') }
