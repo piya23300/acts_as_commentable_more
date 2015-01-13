@@ -26,21 +26,6 @@ RSpec.describe Comment, :type => :model do
     end
   end
 
-  # describe "class helper" do
-  #   it "self.find_comments_by_user(user, type: nil)" do
-  #     post_1 = create(:post)
-  #     post_2 = create(:post)
-  #     admin = create(:admin)
-  #     user = create(:user)
-  #     user_comment_post_1 = post_1.comments.create(message: 'my message', user: user)
-  #     admin_comment_post_1 = post_1.comments.create(message: 'my message', user: admin)
-  #     user_comment_post_2 = post_1.comments.create(message: 'my message', user: user)
-
-  #     Comment.find_comments_by_user(user).each do |comment|
-  #       expect(comment.user).to eq user
-  #     end
-  #   end
-  # end
 
 
 end

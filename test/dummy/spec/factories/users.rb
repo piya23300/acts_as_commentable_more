@@ -1,7 +1,7 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :comment do
-    massage "MyString"
+  factory :user do
+    sequence(:name) { |n| "my name #{n}" }
   end
 end

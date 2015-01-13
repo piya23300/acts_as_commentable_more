@@ -28,7 +28,7 @@ module Dummy
                       :request_specs => true,
                       :model_specs => false
       g.fixture_replacement :factory_girl,
-                      :dir => "test/dummy/spec/factories" 
+                      :dir => "spec/factories" 
     end
   end
 end

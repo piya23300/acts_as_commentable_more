@@ -1,6 +1,8 @@
 class Comment < ActiveRecord::Base
-  acts_as_commentable
+  # include ActsAsCommentable::Finders
   
   belongs_to :commentable, polymorphic: true
   belongs_to :user, polymorphic: true
+
+  belongs_to :post
 end
