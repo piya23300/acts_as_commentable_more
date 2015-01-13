@@ -3,7 +3,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     create_table :<%= table_name %> do |t|
       # t.string :title, :limit => 50, :default => "" 
       t.text :message
-      t.references :<%= class_name.demodulize.underscore + "able" %>, :polymorphic => true
+      t.references :<%= class_name.demodulize.underscore + "able" %>, polymorphic: true
       t.references :user
       t.string :type, default: nil
       t.timestamps
