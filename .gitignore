@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 .bundle/
 log/*.log
 pkg/
@@ -40,3 +40,6 @@ ctest/dummy/onfig/secrets.yml
 /vendor/assets/bower_components
 *.bowerrc
 bower.json
+
+# ignore coverage result file
+test/dummy/coverage/.resultset.json
