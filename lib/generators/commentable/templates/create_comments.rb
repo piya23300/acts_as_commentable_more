@@ -5,7 +5,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration
       t.text :message
       t.references :<%= class_name.demodulize.underscore + "able" %>, :polymorphic => true
       t.references :user
-      t.string :type, :default => "comments"
+      t.string :type, default: nil
       t.timestamps
     end
 
