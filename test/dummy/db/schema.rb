@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20150113074249) do
     t.string   "commentable_type"
     t.integer  "user_id"
     t.string   "user_type"
-    t.string   "type"
+    t.string   "role"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20150113074249) do
     t.string   "customable_type"
     t.integer  "user_id"
     t.string   "user_type"
-    t.string   "type"
+    t.string   "role"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

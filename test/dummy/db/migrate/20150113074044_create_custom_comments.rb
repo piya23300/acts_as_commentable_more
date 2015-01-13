@@ -4,7 +4,7 @@ class CreateCustomComments < ActiveRecord::Migration
       t.string :message
       t.references :customable, polymorphic: true, index: true
       t.references :user, polymorphic: true, index: true
-      t.string :type
+      t.string :role
       t.timestamps
     end
   end

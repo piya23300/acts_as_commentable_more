@@ -1,4 +1,4 @@
 module ActsAsCommentableMore
-  require 'comment_methods'
   require 'commentable_methods'
+  require 'comment_methods'
 end
