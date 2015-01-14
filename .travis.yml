@@ -19,3 +19,5 @@ before_script:
   - bundle exec rake db:test:prepare
 
 script: bundle exec rspec
+
+travis encrypt "happio:PFNa84fG9iz9hVr5Q22UNUMo" --add notifications.slack
