@@ -10,7 +10,7 @@
 
   rails generate commentable your_model_name
 or
-{read more about generate}[https://github.com/piya23300/acts_as_commentable_more/src/develop/lib/generators/commentable/USAGE]
+{read more about generate}[https://github.com/piya23300/acts_as_commentable_more/tree/develop/lib/generators/commentable/USAGE]
 
 ---
 
