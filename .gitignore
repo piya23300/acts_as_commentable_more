@@ -8,6 +8,9 @@ test/dummy/log/*.log
 test/dummy/tmp/
 test/dummy/.sass-cache
 test/dummy/config/database.yml
+test/dummy/db/schema.rb
+
+test/dummy/coverage
 
 *.rbc
 capybara-*.html
