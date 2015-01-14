@@ -6,7 +6,6 @@ Example:
     rails generate commentable <model_name>
 
     This will create:
-        what/will/it/create
         app/models/<model_name>.rb
         db/migrate/<time_stamp>_create_<model_name>s.rb
 
