@@ -9,6 +9,8 @@ test/dummy/tmp/
 test/dummy/.sass-cache
 test/dummy/config/database.yml
 
+test/dummy/coverage
+
 *.rbc
 capybara-*.html
 .rspec
