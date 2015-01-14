@@ -10,7 +10,7 @@ task :default => :spec
 task :test => :spec
 
 require 'bundler/gem_helper'
-Bundler::GemHelper.install_tasks :name => "acts_as_commentable_more"
+Bundler::GemHelper.install_tasks :name => "acts_as_commentable_more", :dir => "../.."
 
 require File.expand_path('../config/application', __FILE__)
 
