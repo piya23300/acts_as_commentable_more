@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150113074249) do
+ActiveRecord::Schema.define(version: 20150114052120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,12 @@ ActiveRecord::Schema.define(version: 20150113074249) do
 
   add_index "custom_comments", ["customable_id", "customable_type"], name: "index_custom_comments_on_customable_id_and_customable_type", using: :btree
   add_index "custom_comments", ["user_id", "user_type"], name: "index_custom_comments_on_user_id_and_user_type", using: :btree
+
+  create_table "letters", force: true do |t|
+    t.string   "title"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "notes", force: true do |t|
     t.string   "title"

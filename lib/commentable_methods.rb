@@ -39,7 +39,7 @@ module Happio
 
           association_options = default_options.merge(options.compact)
           self.comment_roles = (default_roles + types.flatten.compact.map(&:to_sym)).uniq
-
+          
           if comment_roles == [:comment]
             has_many :comments, has_many_options(:comment, association_options)
           else
@@ -48,10 +48,15 @@ module Happio
             end
             class_eval %{
               def all_comments
-                #{default_options[:class_name].classify.constantize}.where(#{default_options[:as].to_s + '_id'}: self.id).order(created_at: :desc)
+                #{association_options[:class_name].classify.constantize}
+                .where(
+                  #{association_options[:as].to_s + '_id'}: self.id,
+                  #{association_options[:as].to_s + '_type'}: self.class.base_class.name
+                ).order(created_at: :desc)
               end
             }
           end
+          
         end
         
       end
