@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Comment, :type => :model do
+RSpec.describe ActsAsCommentableMore do
 
   describe "managed basic comment" do
     it "add a comment" do

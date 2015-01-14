@@ -1,14 +1,6 @@
 {
   "RSpec": {
     "coverage": {
-      "/Users/Mac/repositories/acts_as_commentable_more/test/dummy/app/models/comment.rb": [
-        1,
-        1,
-        null,
-        1,
-        1,
-        null
-      ],
       "/Users/Mac/repositories/acts_as_commentable_more/test/dummy/spec/models/admin_spec.rb": [
         1,
         null,
@@ -21,6 +13,14 @@
         null
       ],
       "/Users/Mac/repositories/acts_as_commentable_more/test/dummy/spec/models/comment_spec.rb": [
+        1,
+        null,
+        1,
+        1,
+        null
+      ],
+      "/Users/Mac/repositories/acts_as_commentable_more/test/dummy/app/models/comment.rb": [
+        1,
         1,
         null,
         1,
@@ -105,6 +105,6 @@
         null
       ]
     },
-    "timestamp": 1421213039
+    "timestamp": 1421215508
   }
 }
