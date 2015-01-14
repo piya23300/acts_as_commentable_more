@@ -122,7 +122,7 @@ RSpec.describe ActsAsCommentableMore do
       
     end
 
-    it "doesn't have comments scope to get all comment" do
+    it "doesn't have comments association to get all comment" do
       note = create(:note)
       expect{ note.comments }.to raise_error(NoMethodError)
     end
