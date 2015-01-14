@@ -190,4 +190,16 @@ RSpec.describe ActsAsCommentableMore do
     end
   end
 
+  describe "record related attributes" do
+    it "can update related_attributes feild with hash array" do
+      post = create(:post)
+      comment = post.comments.create(related_attributes: {user_id: 1, location_name: 'Thailand'})
+      expect(comment.related_attributes['user_id']).to eq nil
+      expect(comment.related_attributes['location_name']).to eq nil
+      expect(comment.related_attributes[:user_id]).to eq '1'
+      expect(comment.related_attributes[:location_name]).to eq 'Thailand'
+    end
+
+  end
+
 end
