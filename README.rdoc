@@ -4,4 +4,14 @@
 {<img src="https://gemnasium.com/piya23300/acts_as_commentable_more.svg" alt="Dependency Status" />}[https://gemnasium.com/piya23300/acts_as_commentable_more]
 {<img src="https://coveralls.io/repos/piya23300/acts_as_commentable_more/badge.png" alt="Coverage Status" />}[https://coveralls.io/r/piya23300/acts_as_commentable_more]
 
+---
+
+== Generate
+
+  rails generate commentable your_model_name
+or
+{read more about generate}[https://github.com/piya23300/acts_as_commentable_more/tree/develop/lib/generators/commentable/USAGE]
+
+---
+
 This project rocks and uses MIT-LICENSE.
