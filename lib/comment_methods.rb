@@ -15,5 +15,4 @@ module ActsAsCommentableMore::Finders
     
   end
 
-
-end 
+end
