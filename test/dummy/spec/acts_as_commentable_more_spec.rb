@@ -74,7 +74,9 @@ RSpec.describe ActsAsCommentableMore do
   describe "managed comments with association options(:class_name and :as)" do
     it "add a comment" do
       topic = create(:topic)
-      expect{topic.comments.create(message: 'my message')}.to change(CustomComment, :count).by(1)
+      comment = topic.comments.build(message: 'my message')
+      expect{comment.save}.to change(CustomComment, :count).by(1)
+      expect(comment.role).to eq 'comment'
     end
     it "gets all comment" do
       topics = create_list(:topic, 2)
