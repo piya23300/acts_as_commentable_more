@@ -1,5 +1,9 @@
 module ActsAsCommentableMore::Finders
   extend ActiveSupport::Concern
+
+  def related_attributes
+    read_attribute(:related_attributes).symbolize_keys
+  end
   
   module ClassMethods
 
@@ -10,4 +14,6 @@ module ActsAsCommentableMore::Finders
     end
     
   end
+
+
 end 

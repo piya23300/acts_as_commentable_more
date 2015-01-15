@@ -1,6 +1,4 @@
 class Post < ActiveRecord::Base
-  acts_as_commentable
-  
-  # has_many :comments, as: :commentable
+  acts_as_commentable 
 end
 
