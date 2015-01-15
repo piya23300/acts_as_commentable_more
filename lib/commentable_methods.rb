@@ -10,17 +10,18 @@ module Happio
 
       module HelperMethods
         private
-        def define_role_based_inflection(role, join_options)
-          send("define_role_based_inflection_#{Rails.version.first}", role, join_options)
+        def define_role_based_inflection(role, association_base_name, join_options)
+          association_name = "#{role.to_s}_#{association_base_name.to_s}"
+          send("define_role_based_inflection_#{Rails.version.first}", role, association_name,join_options)
         end
 
-        def define_role_based_inflection_3(role, options)
-          has_many "#{role.to_s}_comments".to_sym,
+        def define_role_based_inflection_3(role, association_name, join_options)
+          has_many "#{association_name.to_s}".to_sym,
                    has_many_options(role, join_options).merge(:conditions => { role: role.to_s })
         end
 
-        def define_role_based_inflection_4(role, join_options)
-          has_many "#{role.to_s}_comments".to_sym,
+        def define_role_based_inflection_4(role, association_name, join_options)
+          has_many "#{association_name.to_s}".to_sym,
                    -> { where(role: role.to_s) },
                    has_many_options(role, join_options)
         end
@@ -33,21 +34,23 @@ module Happio
       module ClassMethods
         include HelperMethods
 
-        def acts_as_commentable(types: [], options: {})
+        def acts_as_commentable(types: [], options: {}, as: nil)
           default_options = {as: :commentable, dependent: :destroy, class_name: 'Comment'}
-          default_roles = [:comment]
+          default_as = :comments
+          default_roles = [default_as.to_s.singularize.to_sym]
 
           association_options = default_options.merge(options.compact)
           self.comment_roles = (default_roles + types.flatten.compact.map(&:to_sym)).uniq
-          
-          if comment_roles == [:comment]
-            has_many :comments, has_many_options(:comment, association_options)
+          association_base_name = (as || default_as).to_s.pluralize
+
+          if comment_roles == [default_as.to_s.singularize.to_sym]
+            has_many association_base_name.to_sym, has_many_options(default_roles.first, association_options)
           else
             comment_roles.each do |role|
-              define_role_based_inflection(role, association_options)
+              define_role_based_inflection(role, association_base_name, association_options)
             end
             class_eval %{
-              def all_comments
+              def all_#{association_base_name.to_s}
                 #{association_options[:class_name].classify.constantize}
                 .where(
                   #{association_options[:as].to_s + '_id'}: self.id,

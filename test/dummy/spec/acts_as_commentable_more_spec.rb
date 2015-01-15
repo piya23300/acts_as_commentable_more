@@ -71,7 +71,7 @@ RSpec.describe ActsAsCommentableMore do
     
   end
 
-  describe "managed comments with association options :class_name and :as" do
+  describe "managed comments with association options(:class_name and :as)" do
     it "add a comment" do
       topic = create(:topic)
       expect{topic.comments.create(message: 'my message')}.to change(CustomComment, :count).by(1)
@@ -200,6 +200,26 @@ RSpec.describe ActsAsCommentableMore do
       expect(comment.related_attributes[:location_name]).to eq 'Thailand'
     end
 
+  end
+
+  describe "setting :as to custom association name", ff: true do
+    it "doen't have any roles" do
+      post_custom = create(:post_custom_asso_name)
+      expect{post_custom.custom_posts}.not_to raise_error
+      expect{post_custom.comments}.to raise_error(NoMethodError)
+
+    end
+
+    it "has roles" do
+      note_custom = create(:note_custom_asso_name)
+      expect{note_custom.all_custom_notes}.not_to raise_error
+      expect{note_custom.private_custom_notes}.not_to raise_error
+      expect{note_custom.publish_custom_notes}.not_to raise_error
+
+      expect{note_custom.all_notes}.to raise_error(NoMethodError)
+      expect{note_custom.private_notes}.to raise_error(NoMethodError)
+      expect{note_custom.publish_notes}.to raise_error(NoMethodError)
+    end
   end
 
 end
