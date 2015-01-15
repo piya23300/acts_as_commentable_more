@@ -13,6 +13,6 @@ class <%= migration_class_name %> < ActiveRecord::Migration
     end
 
     add_index :<%= table_name %>, [:<%= class_name.demodulize.underscore + "able" %>_type, :<%= class_name.demodulize.underscore + "able" %>_id],
-     name: :index_<%= plural_name %>_on_<%= class_name.demodulize.underscore %>able_type_and_<%= class_name.demodulize.underscore %>able_id
+     name: :index_<%= table_name %>_on_<%= class_name.demodulize.underscore %>able_type_and_<%= class_name.demodulize.underscore %>able_id
   end
 end
