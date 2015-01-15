@@ -160,6 +160,31 @@ RSpec.describe ActsAsCommentableMore do
       end
     end
 
+    it "#to_role to change only" do
+      note = create(:note)
+      private_comment = note.private_comments.create(message: 'private message')
+      private_comment.to_publish
+      expect(private_comment.role).to eq 'publish'
+      private_comment.reload
+      expect(private_comment.role).to eq 'private'
+    end
+    it "#to_role! to change and update" do
+      note = create(:note)
+      private_comment = note.private_comments.create(message: 'private message')
+      private_comment.to_publish!
+      expect(private_comment.role).to eq 'publish'
+      private_comment.reload
+      expect(private_comment.role).to eq 'publish'
+    end
+
+    it "#is_role? to check role value" do
+      note = create(:note)
+      private_comment = note.private_comments.create(message: 'private message')
+      expect(private_comment.is_private?).to eq true
+      expect(private_comment.is_publish?).to eq false
+    end
+    
+
     describe "class helper" do
       context "self.find_comments_by_user(user, role: nil)" do
         before do
@@ -221,7 +246,7 @@ RSpec.describe ActsAsCommentableMore do
       comment = post_custom.add_custom_comment
       expect(comment.role).to eq 'custom_comment'
     end
-    it "doen't have any roles", ff: true do
+    it "doen't have any roles" do
       post_custom = create(:post_custom_asso_name)
       expect{post_custom.custom_comments}.not_to raise_error
       expect{post_custom.add_custom_comment()}.not_to raise_error
