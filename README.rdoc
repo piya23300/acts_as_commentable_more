@@ -1,5 +1,6 @@
 = ActsAsCommentableMore
 
+{<img src="https://travis-ci.org/piya23300/acts_as_commentable_more.svg" alt="Build Status" />}[https://travis-ci.org/piya23300/acts_as_commentable_more]
 {<img src="https://gemnasium.com/piya23300/acts_as_commentable_more.svg" alt="Dependency Status" />}[https://gemnasium.com/piya23300/acts_as_commentable_more]
 {<img src="https://coveralls.io/repos/piya23300/acts_as_commentable_more/badge.png" alt="Coverage Status" />}[https://coveralls.io/r/piya23300/acts_as_commentable_more]
 
