@@ -1,0 +1,18 @@
+defaults: &defaults
+  adapter: postgresql
+  encoding: unicode
+  database: acts_at_commentable_<%= Rails.env %>
+  pool: 5
+  username: postgres
+  password:
+  template: template0
+  host: localhost
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
