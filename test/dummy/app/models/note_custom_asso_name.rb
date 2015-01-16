@@ -1,3 +1,3 @@
 class NoteCustomAssoName < ActiveRecord::Base
-  acts_as_commentable types: [:private, :publish], as: :custom_comments
+  acts_as_commentable types: [:private, :public], as: :custom_comments
 end
