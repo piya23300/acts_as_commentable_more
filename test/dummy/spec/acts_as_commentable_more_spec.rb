@@ -149,14 +149,14 @@ RSpec.describe ActsAsCommentableMore do
       expect(public_note.role).to eq 'public'
     end
 
-    describe "create_{role}_{as} method for adding comment of role" do
-      it "create_private_comment" do
+    describe "creates_{role}_{as}s method for adding comment of role" do
+      it "creates_private_comments" do
         note = create(:note)
-        expect{note.create_private_comment(message: 'new comment')}.to change(Comment, :count).by(1)
+        expect{note.creates_private_comments(message: 'new comment')}.to change(Comment, :count).by(1)
       end
-      it "create_public_comment" do
+      it "creates_public_comments" do
         note = create(:note)
-        expect{note.create_public_comment(message: 'new comment')}.to change(Comment, :count).by(1)
+        expect{note.creates_public_comments(message: 'new comment')}.to change(Comment, :count).by(1)
       end
     end
 
@@ -243,16 +243,16 @@ RSpec.describe ActsAsCommentableMore do
   describe "setting :as to custom association name" do
     it "role= :as.singulize" do
       post_custom = create(:post_custom_asso_name)
-      comment = post_custom.create_custom_comment
+      comment = post_custom.creates_custom_comments
       expect(comment.role).to eq 'custom_comment'
     end
     it "doen't have any roles" do
       post_custom = create(:post_custom_asso_name)
       expect{post_custom.custom_comments}.not_to raise_error
-      expect{post_custom.create_custom_comment()}.not_to raise_error
+      expect{post_custom.creates_custom_comments()}.not_to raise_error
 
       expect{post_custom.comments}.to raise_error(NoMethodError)
-      expect{post_custom.create_comment()}.to raise_error(NoMethodError)
+      expect{post_custom.creates_comments()}.to raise_error(NoMethodError)
     end
 
     it "has roles" do
@@ -260,14 +260,14 @@ RSpec.describe ActsAsCommentableMore do
       expect{note_custom.all_custom_comments}.not_to raise_error
       expect{note_custom.private_custom_comments}.not_to raise_error
       expect{note_custom.public_custom_comments}.not_to raise_error
-      expect{note_custom.create_public_custom_comment()}.not_to raise_error
-      expect{note_custom.create_private_custom_comment()}.not_to raise_error
+      expect{note_custom.creates_public_custom_comments()}.not_to raise_error
+      expect{note_custom.creates_private_custom_comments()}.not_to raise_error
 
       expect{note_custom.all_comments}.to raise_error(NoMethodError)
       expect{note_custom.private_comments}.to raise_error(NoMethodError)
       expect{note_custom.public_comments()}.to raise_error(NoMethodError)
-      expect{note_custom.create_public_comment()}.to raise_error(NoMethodError)
-      expect{note_custom.create_private_comment()}.to raise_error(NoMethodError)
+      expect{note_custom.creates_public_comments()}.to raise_error(NoMethodError)
+      expect{note_custom.creates_private_comments()}.to raise_error(NoMethodError)
     end
 
   end
