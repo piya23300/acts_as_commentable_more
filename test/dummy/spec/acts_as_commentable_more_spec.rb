@@ -71,10 +71,12 @@ RSpec.describe ActsAsCommentableMore do
     
   end
 
-  describe "managed comments with association options :class_name and :as" do
+  describe "managed comments with association options(:class_name and :as)" do
     it "add a comment" do
       topic = create(:topic)
-      expect{topic.comments.create(message: 'my message')}.to change(CustomComment, :count).by(1)
+      comment = topic.comments.build(message: 'my message')
+      expect{comment.save}.to change(CustomComment, :count).by(1)
+      expect(comment.role).to eq 'comment'
     end
     it "gets all comment" do
       topics = create_list(:topic, 2)
@@ -101,7 +103,7 @@ RSpec.describe ActsAsCommentableMore do
       it "default association options" do
         note = create(:note)
         5.times { |i| note.private_comments.create(message: 'private message') }
-        3.times { |i| note.publish_comments.create(message: 'publish message') }
+        3.times { |i| note.public_comments.create(message: 'public message') }
 
         other_note = create(:note)
         5.times { |i| other_note.private_comments.create(message: 'private message') }
@@ -130,9 +132,9 @@ RSpec.describe ActsAsCommentableMore do
     it "gets comment specific role by {role}_comments method" do
       note = create(:note)
       5.times { |i| note.private_comments.create(message: 'private message') }
-      3.times { |i| note.publish_comments.create(message: 'publish message') }
+      3.times { |i| note.public_comments.create(message: 'public message') }
       expect(note.private_comments.count).to eq 5
-      expect(note.publish_comments.count).to eq 3
+      expect(note.public_comments.count).to eq 3
     end
 
     it "add comment specific role" do
@@ -142,10 +144,46 @@ RSpec.describe ActsAsCommentableMore do
       expect{private_note.save}.to change(Comment, :count).by(1)
       expect(private_note.role).to eq 'private'
 
-      publish_note = note.publish_comments.build(message: 'publish message')
-      expect{publish_note.save}.to change(Comment, :count).by(1)
-      expect(publish_note.role).to eq 'publish'
+      public_note = note.public_comments.build(message: 'public message')
+      expect{public_note.save}.to change(Comment, :count).by(1)
+      expect(public_note.role).to eq 'public'
     end
+
+    describe "creates_{role}_{as}s method for adding comment of role" do
+      it "creates_private_comments" do
+        note = create(:note)
+        expect{note.creates_private_comments(message: 'new comment')}.to change(Comment, :count).by(1)
+      end
+      it "creates_public_comments" do
+        note = create(:note)
+        expect{note.creates_public_comments(message: 'new comment')}.to change(Comment, :count).by(1)
+      end
+    end
+
+    it "#to_role to change only" do
+      note = create(:note)
+      private_comment = note.private_comments.create(message: 'private message')
+      private_comment.to_public
+      expect(private_comment.role).to eq 'public'
+      private_comment.reload
+      expect(private_comment.role).to eq 'private'
+    end
+    it "#to_role! to change and update" do
+      note = create(:note)
+      private_comment = note.private_comments.create(message: 'private message')
+      private_comment.to_public!
+      expect(private_comment.role).to eq 'public'
+      private_comment.reload
+      expect(private_comment.role).to eq 'public'
+    end
+
+    it "#is_role? to check role value" do
+      note = create(:note)
+      private_comment = note.private_comments.create(message: 'private message')
+      expect(private_comment.is_private?).to eq true
+      expect(private_comment.is_public?).to eq false
+    end
+    
 
     describe "class helper" do
       context "self.find_comments_by_user(user, role: nil)" do
@@ -155,18 +193,18 @@ RSpec.describe ActsAsCommentableMore do
           @admin = create(:admin)
           @user = create(:user)
           user_private_comment_note_1 = note_1.private_comments.create(message: 'private message user', user: @user)
-          user_publish_comment_note_2 = note_2.publish_comments.create(message: 'publish message user', user: @user)
-          admin_comment_note_1 = note_1.publish_comments.create(message: 'publish message admin', user: @admin)
+          user_public_comment_note_2 = note_2.public_comments.create(message: 'public message user', user: @user)
+          admin_comment_note_1 = note_1.public_comments.create(message: 'public message admin', user: @admin)
         end
 
         it "findby user and role=nil" do
           Comment.find_comments_by_user(@user).each do |comment|
             expect(comment.user).to eq @user
-            expect(comment.role).to eq('private').or eq('publish')
+            expect(comment.role).to eq('private').or eq('public')
           end
           Comment.find_comments_by_user(@admin).each do |comment|
             expect(comment.user).to eq @admin
-            expect(comment.role).to eq('private').or eq('publish')
+            expect(comment.role).to eq('private').or eq('public')
           end
         end
 
@@ -175,9 +213,9 @@ RSpec.describe ActsAsCommentableMore do
             expect(comment.user).to eq @user
             expect(comment.role).to eq 'private'
           end
-          Comment.find_comments_by_user(@admin, :publish).each do |comment|
+          Comment.find_comments_by_user(@admin, :public).each do |comment|
             expect(comment.user).to eq @admin
-            expect(comment.role).to eq 'publish'
+            expect(comment.role).to eq 'public'
           end
         end
 
@@ -198,6 +236,38 @@ RSpec.describe ActsAsCommentableMore do
       expect(comment.related_attributes['location_name']).to eq nil
       expect(comment.related_attributes[:user_id]).to eq '1'
       expect(comment.related_attributes[:location_name]).to eq 'Thailand'
+    end
+
+  end
+
+  describe "setting :as to custom association name" do
+    it "role= :as.singulize" do
+      post_custom = create(:post_custom_asso_name)
+      comment = post_custom.creates_custom_comments
+      expect(comment.role).to eq 'custom_comment'
+    end
+    it "doen't have any roles" do
+      post_custom = create(:post_custom_asso_name)
+      expect{post_custom.custom_comments}.not_to raise_error
+      expect{post_custom.creates_custom_comments()}.not_to raise_error
+
+      expect{post_custom.comments}.to raise_error(NoMethodError)
+      expect{post_custom.creates_comments()}.to raise_error(NoMethodError)
+    end
+
+    it "has roles" do
+      note_custom = create(:note_custom_asso_name)
+      expect{note_custom.all_custom_comments}.not_to raise_error
+      expect{note_custom.private_custom_comments}.not_to raise_error
+      expect{note_custom.public_custom_comments}.not_to raise_error
+      expect{note_custom.creates_public_custom_comments()}.not_to raise_error
+      expect{note_custom.creates_private_custom_comments()}.not_to raise_error
+
+      expect{note_custom.all_comments}.to raise_error(NoMethodError)
+      expect{note_custom.private_comments}.to raise_error(NoMethodError)
+      expect{note_custom.public_comments()}.to raise_error(NoMethodError)
+      expect{note_custom.creates_public_comments()}.to raise_error(NoMethodError)
+      expect{note_custom.creates_private_comments()}.to raise_error(NoMethodError)
     end
 
   end
