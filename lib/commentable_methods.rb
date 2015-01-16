@@ -20,16 +20,16 @@ module Happio
           has_many "#{association_name.to_s}".to_sym,
                    -> { where(role: role.to_s) },
                    has_many_options(role, join_options)
-          define_add_role(association_name)
+          define_create_role(association_name)
         end
 
         def has_many_options(role, join_options)
           { :before_add => Proc.new { |x, c| c.role = role.to_s } }.merge(join_options)
         end
 
-        def define_add_role(association_name)
+        def define_create_role(association_name)
           class_eval %{
-            def add_#{association_name.to_s.singularize}(attributes = nil)
+            def create_#{association_name.to_s.singularize}(attributes = nil)
               #{association_name.to_s}.create(attributes)
             end
           }
@@ -56,7 +56,7 @@ module Happio
 
           if comment_roles == [default_as.to_s.singularize.to_sym]
             has_many association_base_name.to_sym, has_many_options(association_base_name.singularize, association_options)
-            define_add_role(association_base_name)
+            define_create_role(association_base_name)
           else
             comment_roles.each do |role|
               define_role_based_inflection(role, association_base_name, association_options)
