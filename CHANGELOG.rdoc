@@ -1,5 +1,0 @@
-=== Change Log
-
-* v.1.0.0
-- can set comment's types
-- can set association options
