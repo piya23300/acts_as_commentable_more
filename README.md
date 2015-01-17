@@ -24,16 +24,16 @@ rails generate commentable your_model_name
 Model would like to have commentable.
 
 ```ruby
-    class Post < ActiveRecord::Base
-    acts_as_commentable # default options types: [:comment], options: { class_name: 'Comment', as: :commentable }, as: :comments
-  end
+class Post < ActiveRecord::Base
+  acts_as_commentable # default options types: [:comment], options: { class_name: 'Comment', as: :commentable }, as: :comments
+end
 ```
 
 ```ruby
 post = Post.create #<Post>
 
 #get all comments of post
-comments = post.comments #<ActiveRecord::Associations::CollectionProxy []>
+comments = post.comments #[<Comemnt>]
 
 #create comment of post
 comment = post.creates_comments(message: 'new message') #<Comment>
@@ -110,7 +110,7 @@ private_comment.to_public! #save
 
 ### Options
 ```ruby
-acts_as_commentable types: [:show, :hide], options: { class_name: 'CustomComment', as: :custom_commentable }, as: notes
+acts_as_commentable types: [:show, :hide], options: { class_name: 'CustomComment', as: :custom_commentable }, as: :notes
 ```
 
 - type : type of comment #array
