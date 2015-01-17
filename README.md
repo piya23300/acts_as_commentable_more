@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/acts_as_commentable_more.svg)](http://badge.fury.io/rb/acts_as_commentable_more)
 [![Build Status](https://travis-ci.org/piya23300/acts_as_commentable_more.svg)](https://travis-ci.org/piya23300/acts_as_commentable_more)
 [![Dependency Status](https://gemnasium.com/piya23300/acts_as_commentable_more.svg)](https://gemnasium.com/piya23300/acts_as_commentable_more)
+[![Code Climate](https://codeclimate.com/github/piya23300/acts_as_commentable_more/badges/gpa.svg)](https://codeclimate.com/github/piya23300/acts_as_commentable_more)
 [![Coverage Status](https://coveralls.io/repos/piya23300/acts_as_commentable_more/badge.svg)](https://coveralls.io/r/piya23300/acts_as_commentable_more)
 
 ---
@@ -123,12 +124,41 @@ comment.related_attributes[:ip_address] #"xxx.xxx.xxx"
 acts_as_commentable types: [:comment], options: { class_name: 'Comment', as: :commentable }, as: :comments
 ```
 
-- type : type of comment #array
+- types : type of comment #array
 - options : association options #hash
     - class_name : class name of comment
     - as : polymorephic name
 - as : name of association
 
+#### :as option
+It change suffix name of all method.
+
+```ruby
+    class Post < ActiveRecord::Base
+    acts_as_commentable as: :notes, types: [:private, :public], default options: { class_name: 'Comment', as: :commentable }
+  end
+```
+
+usage
+```ruby
+post = Post.create #<Post>
+
+#get all private notes of post
+private_notes = post.private_notes #[<Comment role: 'private'>]
+
+#get all public notes of post
+public_notes = post.public_notes #[<Comment role: 'public'>]
+
+#get all notes of post
+notes = post.all_notes #[<Comment>]
+
+#create private notes
+private_note = post.creates_private_notes(message: 'private message') #<Comment role: 'private'>
+
+#create public notes
+public_note = post.creates_public_notes(message: 'public message') #<Comment role: 'public'>
+
+```
 
 
 ## LICENSE
