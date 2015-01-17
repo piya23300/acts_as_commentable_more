@@ -21,7 +21,7 @@ rails generate commentable your_model_name
 
 ### Basic Usege
 ### Setting
-Model would like to have commentable.
+Model would like to have comments.
 
 ```ruby
 class Post < ActiveRecord::Base
@@ -29,6 +29,7 @@ class Post < ActiveRecord::Base
 end
 ```
 
+usage
 ```ruby
 post = Post.create #<Post>
 
@@ -108,9 +109,18 @@ private_comment.to_public #not save
 private_comment.to_public! #save
 ```
 
+### Related Attributes of Comment
+support Postgrasql only
+```ruby
+post = Post.create
+
+comment = post.creates_comments(related_attributes: {ip_address: "xxx.xxx.xxx"})
+comment.related_attributes[:ip_address] #"xxx.xxx.xxx"
+```
+
 ### Options
 ```ruby
-acts_as_commentable types: [:show, :hide], options: { class_name: 'CustomComment', as: :custom_commentable }, as: :notes
+acts_as_commentable types: [:comment], options: { class_name: 'Comment', as: :commentable }, as: :comments
 ```
 
 - type : type of comment #array
