@@ -57,22 +57,9 @@ module ActsAsCommentableMore
 
         comment_roles.each do |role|
           association_class.class_eval %{
-            def is_#{role}?
-              raise(NoMethodError, "undefined method 'is_" + role.to_s + "?'") unless can_change_role?("#{role.to_s}")
-              role == "#{role.to_s}"
-            end
-
-            def to_#{role}
-              raise(NoMethodError, "undefined method 'to_" + role.to_s + "'") unless can_change_role?("#{role.to_s}")
-              self.role = "#{role.to_s}"
-            end
-
-            def to_#{role}!
-              raise(NoMethodError, "undefined method 'to_" + role.to_s + "!'") unless can_change_role?("#{role.to_s}")
-              self.role = "#{role.to_s}"
-              self.save
-            end
-
+            #{define_is_role?(role)}
+            #{define_to_role(role)}
+            #{define_to_role!(role)}
           }
         end
       end

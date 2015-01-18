@@ -161,14 +161,18 @@ RSpec.describe ActsAsCommentableMore do
       end
     end
 
-    it "#to_role to change only" do
-      note = create(:note)
-      private_comment = note.private_comments.create(message: 'private message')
-      private_comment.to_public
-      expect(private_comment.role).to eq 'public'
-      private_comment.reload
-      expect(private_comment.role).to eq 'private'
+    describe "#to_role" do
+      it "change only" do
+        note = create(:note)
+        private_comment = note.private_comments.create(message: 'private message')
+        private_comment.to_public
+        expect(private_comment.role).to eq 'public'
+        private_comment.reload
+        expect(private_comment.role).to eq 'private'
+      end
     end
+
+    
     it "#to_role! to change and update" do
       note = create(:note)
       private_comment = note.private_comments.create(message: 'private message')
