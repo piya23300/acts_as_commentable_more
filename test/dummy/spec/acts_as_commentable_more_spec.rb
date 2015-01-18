@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe ActsAsCommentableMore do
 
   describe "managed basic comment" do
+
     it "add a comment" do
       post = create(:post)
       expect{post.comments.create(message: 'my message')}.to change(Comment, :count).by(1)
@@ -176,7 +177,6 @@ RSpec.describe ActsAsCommentableMore do
       private_comment.reload
       expect(private_comment.role).to eq 'public'
     end
-
     it "#is_role? to check role value" do
       note = create(:note)
       private_comment = note.private_comments.create(message: 'private message')
@@ -197,7 +197,7 @@ RSpec.describe ActsAsCommentableMore do
           admin_comment_note_1 = note_1.public_comments.create(message: 'public message admin', user: @admin)
         end
 
-        it "findby user and role=nil" do
+        it "find by user and role=nil" do
           Comment.find_comments_by_user(@user).each do |comment|
             expect(comment.user).to eq @user
             expect(comment.role).to eq('private').or eq('public')
@@ -270,6 +270,14 @@ RSpec.describe ActsAsCommentableMore do
       expect{note_custom.creates_private_comments()}.to raise_error(NoMethodError)
     end
 
+  end
+
+  describe "STI Subclass" do
+    it "add class_name not base_name for owner type" do
+      sub_model = SubModel.create
+      comment = sub_model.comments.create(message: 'sub post')
+      expect(comment.commentable_type).to eq sub_model.class.name
+    end
   end
 
 end
