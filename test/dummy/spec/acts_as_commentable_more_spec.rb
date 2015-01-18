@@ -162,32 +162,46 @@ RSpec.describe ActsAsCommentableMore do
     end
 
     describe "#to_role" do
+      before do
+        @note = create(:note)
+        @private_comment = @note.private_comments.create(message: 'private message')
+      end
       it "change only" do
-        note = create(:note)
-        private_comment = note.private_comments.create(message: 'private message')
-        private_comment.to_public
-        expect(private_comment.role).to eq 'public'
-        private_comment.reload
-        expect(private_comment.role).to eq 'private'
+        @private_comment.to_public
+        expect(@private_comment.role).to eq 'public'
+        @private_comment.reload
+        expect(@private_comment.role).to eq 'private'
+      end
+
+      it "returns object" do
+        expect(@private_comment.to_public).to be_a(Comment)
       end
     end
 
-    
-    it "#to_role! to change and update" do
-      note = create(:note)
-      private_comment = note.private_comments.create(message: 'private message')
-      private_comment.to_public!
-      expect(private_comment.role).to eq 'public'
-      private_comment.reload
-      expect(private_comment.role).to eq 'public'
+    describe "#to_role!" do
+      before do
+        @note = create(:note)
+        @private_comment = @note.private_comments.create(message: 'private message')
+      end
+      it "change and update" do
+        @private_comment.to_public!
+        expect(@private_comment.role).to eq 'public'
+        @private_comment.reload
+        expect(@private_comment.role).to eq 'public'
+      end
+      it "returns object" do
+        expect(@private_comment.to_public!).to be_a(Comment)
+      end
     end
-    it "#is_role? to check role value" do
-      note = create(:note)
-      private_comment = note.private_comments.create(message: 'private message')
-      expect(private_comment.is_private?).to eq true
-      expect(private_comment.is_public?).to eq false
+
+    describe "#is_role?" do
+      it "check role value" do
+        note = create(:note)
+        private_comment = note.private_comments.create(message: 'private message')
+        expect(private_comment.is_private?).to eq true
+        expect(private_comment.is_public?).to eq false
+      end
     end
-    
 
     describe "class helper" do
       context "self.find_comments_by_user(user, role: nil)" do

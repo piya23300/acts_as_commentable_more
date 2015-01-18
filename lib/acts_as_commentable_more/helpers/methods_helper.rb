@@ -26,6 +26,7 @@ module ActsAsCommentableMore
           def to_#{role}
             raise(NoMethodError, "undefined method 'to_" + role.to_s + "'") unless can_change_role?("#{role.to_s}")
             self.role = "#{role.to_s}"
+            self
           end
         }
       end
@@ -34,12 +35,12 @@ module ActsAsCommentableMore
         %{
           def to_#{role}!
             raise(NoMethodError, "undefined method 'to_" + role.to_s + "!'") unless can_change_role?("#{role.to_s}")
-            self.role = "#{role.to_s}"
-            self.save
+            self.update(role: "#{role.to_s}")
+            self
           end
         }
       end
-     
+
     end
   end
 end
