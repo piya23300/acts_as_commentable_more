@@ -1,5 +1,9 @@
 # Change Log
 
+**1.2 now**
+
+- [Feature] counter cache comments
+
 **1.1.0 (16/01/2015)**
 
 - [ADD] method to create comment

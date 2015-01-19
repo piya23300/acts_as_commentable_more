@@ -111,6 +111,11 @@ private_comment.to_public! #save
 ```
 
 ### Cache Counter
+You can enable at ```counter_cache``` from your comment model
+```ruby
+belongs_to :commentable, polymorphic: true, counter_cache: true
+```
+
 Posts table add a field
 ```ruby
 class AddCommentsCountToPost < ActiveRecord::Migration

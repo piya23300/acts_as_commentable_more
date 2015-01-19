@@ -28,6 +28,7 @@ module ActsAsCommentableMore
                 post.increment!(counter_field)
               end
             end
+
             def commentable_decrement!
               comment_table_name = self.class.table_name
               counter_field = \"\#{self.role.to_s}_\#{comment_table_name}_count\"
