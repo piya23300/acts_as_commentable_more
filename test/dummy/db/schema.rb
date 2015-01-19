@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150119074621) do
+ActiveRecord::Schema.define(version: 20150119104406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,21 @@ ActiveRecord::Schema.define(version: 20150119074621) do
   add_index "custom_comments", ["custom_commentable_type", "custom_commentable_id"], name: "index_custom_comments_on_commentable_type_and_commentable_id", using: :btree
   add_index "custom_comments", ["user_id", "user_type"], name: "index_custom_comments_on_user_id_and_user_type", using: :btree
 
+  create_table "disable_cache_comments", force: true do |t|
+    t.text     "message"
+    t.integer  "disable_cache_commentable_id"
+    t.string   "disable_cache_commentable_type"
+    t.integer  "user_id"
+    t.string   "user_type"
+    t.string   "role"
+    t.hstore   "related_attributes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "disable_cache_comments", ["disable_cache_commentable_type", "disable_cache_commentable_id"], name: "index_disable_cache_on_commentable_type_and_commentable_id", using: :btree
+  add_index "disable_cache_comments", ["user_id", "user_type"], name: "index_disable_cache_comments_on_user_id_and_user_type", using: :btree
+
   create_table "letters", force: true do |t|
     t.string   "title"
     t.datetime "created_at"
@@ -67,12 +82,14 @@ ActiveRecord::Schema.define(version: 20150119074621) do
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "comments_count", default: 0
   end
 
   create_table "note_custom_asso_names", force: true do |t|
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "comments_count", default: 0
   end
 
   create_table "notes", force: true do |t|
@@ -88,6 +105,14 @@ ActiveRecord::Schema.define(version: 20150119074621) do
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "comments_count", default: 0
+  end
+
+  create_table "post_disable_caches", force: true do |t|
+    t.string   "title"
+    t.integer  "disable_cache_commentable_count", default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "posts", force: true do |t|
@@ -101,6 +126,7 @@ ActiveRecord::Schema.define(version: 20150119074621) do
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "custom_comments_count", default: 0
   end
 
   create_table "users", force: true do |t|

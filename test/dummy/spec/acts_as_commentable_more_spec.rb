@@ -298,7 +298,7 @@ RSpec.describe ActsAsCommentableMore do
     end
   end
 
-  describe "cache comment counts", focus: true do
+  describe "cache comment counts" do
 
     describe "counter all comments counter" do
       context "not roles" do
@@ -357,6 +357,13 @@ RSpec.describe ActsAsCommentableMore do
           expect(@letter.show_custom_comments_count).to eq 2
           expect(@letter.custom_comments_count).to eq 3
         end
+      end
+
+      it "disable" do
+        post = create(:post_disable_cach)
+        comment = post.comments.create
+        post.reload
+        expect(post.disable_cache_commentable_count).to eq 0
       end
     end
     
