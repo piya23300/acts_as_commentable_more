@@ -110,6 +110,28 @@ private_comment.to_public #not save
 private_comment.to_public! #save
 ```
 
+### Cache Counter
+Posts table add a field
+```ruby
+class AddCommentsCountToPost < ActiveRecord::Migration
+  def change
+    add_column :posts, :comments_count, :integer, default: 0
+  end
+end
+```
+
+if you would like to have many types
+```ruby
+add_column :posts, :comments_count, :integer, default: 0
+add_column :posts, :private_comments_count, :integer, default: 0
+add_column :posts, :public_comments_count, :integer, default: 0
+```
+
+if you adjust association class name. you have to add
+```ruby
+add_column :posts, :{table name of comment that setting}_count, :integer, default: 0
+```
+
 ### Related Attributes of Comment
 support Postgrasql only
 ```ruby
