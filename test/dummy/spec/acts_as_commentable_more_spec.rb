@@ -298,4 +298,57 @@ RSpec.describe ActsAsCommentableMore do
     end
   end
 
+  describe "cache comment counts", focus: true do
+    context "not roles" do
+      before do
+        @post = create(:post)
+        @comments = @post.comments.create([{message: 'comment 1'}, {message: 'comment 2'}])
+        @post.reload
+      end
+      it "increased" do
+        expect(@post.comments_count).to eq 2
+      end
+      it "decreased" do
+        @comments.last.destroy
+        @post.reload
+        expect(@post.comments_count).to eq 1
+      end
+    end
+
+    context "many roles" do
+      before do
+        @note = create(:note)
+        @private_comments = @note.private_comments.create([{message: 'private comment 1'}, {message: 'private comment 2'}])
+        @public_comments = @note.public_comments.create([{message: 'public comment 1'}, {message: 'public comment 2'}])
+        @note.reload
+      end
+      it "increased" do
+        expect(@note.comments_count).to eq 4
+      end
+      it "decreased" do
+        @private_comments.last.destroy
+        @note.reload
+        expect(@note.comments_count).to eq 3
+      end
+    end
+
+    context "association options class_name" do
+      before do
+        @letter = create(:letter)
+        @hide_comments = @letter.hide_comments.create([{message: 'hide letter 1'}, {message: 'hide letter 2'}])
+        @show_comments = @letter.show_comments.create([{message: 'show letter 1'}, {message: 'show letter 2'}])
+        @letter.reload
+      end
+      it "increased" do
+        expect(@letter.custom_comments_count).to eq 4
+      end
+      it "decreased" do
+        @hide_comments.last.destroy
+        @letter.reload
+        expect(@letter.custom_comments_count).to eq 3
+      end
+    end
+    
+  end
+
 end
