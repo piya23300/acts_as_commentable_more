@@ -13,7 +13,7 @@ module ActsAsCommentableMore
         if enable_counter_cache and never_has_counter_cache
           model.class_eval do
             after_create :commentable_increment!
-            after_destroy :commentable_decrement!
+            before_destroy :commentable_decrement!
           end
           model.class_eval %{
             private
@@ -21,22 +21,24 @@ module ActsAsCommentableMore
             def commentable_increment!
               comment_table_name = self.class.table_name
               counter_field = \"\#{self.role.to_s}_\#{comment_table_name}_count\"
+              post_model = self.send("#{commentable_name}_type").classify.constantize
 
-              attributes_post = self.send("#{commentable_name}_type").classify.constantize.column_names
+              attributes_post = post_model.column_names
               if attributes_post.include?(counter_field)
-                post = self.send("#{commentable_name}")
-                post.increment!(counter_field)
+                post_id = self.send("#{commentable_name}_id")
+                post_model.increment_counter(counter_field.to_sym, post_id)
               end
             end
 
             def commentable_decrement!
               comment_table_name = self.class.table_name
               counter_field = \"\#{self.role.to_s}_\#{comment_table_name}_count\"
+              post_model = self.send("#{commentable_name}_type").classify.constantize
 
-              attributes_post = self.send("#{commentable_name}_type").classify.constantize.column_names
+              attributes_post = post_model.column_names
               if attributes_post.include?(counter_field)
-                post = self.send("#{commentable_name}")
-                post.decrement!(counter_field)
+                post_id = self.send("#{commentable_name}_id")
+                post_model.decrement_counter(counter_field.to_sym, post_id)
               end
             end
           }
