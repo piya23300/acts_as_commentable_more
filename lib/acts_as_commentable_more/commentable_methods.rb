@@ -66,7 +66,7 @@ module ActsAsCommentableMore
         end
 
         # counter cache for comment model
-        define_counter_cache_callback(association_class, association_options[:as])
+        define_counter_cache_role_comment_callback(association_class, association_options[:as])
 
       end
     end

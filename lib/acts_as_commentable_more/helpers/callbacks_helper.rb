@@ -4,7 +4,7 @@ module ActsAsCommentableMore
 
       private
 
-      def define_counter_cache_callback model, commentable_name
+      def define_counter_cache_role_comment_callback model, commentable_name
         commentable_reflect = model.reflect_on_all_associations(:belongs_to).select { |belongs_to| belongs_to.name == commentable_name.to_sym }.first
         enable_counter_cache = commentable_reflect.options[:counter_cache]
 
