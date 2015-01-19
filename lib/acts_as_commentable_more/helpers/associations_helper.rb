@@ -20,7 +20,9 @@ module ActsAsCommentableMore
       end
 
       def has_many_options(role, join_options)
-        { :before_add => Proc.new { |x, c| c.role = role.to_s } }.merge(join_options)
+        { 
+          before_add: Proc.new { |post, comment| comment.role = role.to_s },
+        }.merge(join_options)
       end
 
     end

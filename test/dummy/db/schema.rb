@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150119072218) do
+ActiveRecord::Schema.define(version: 20150119074621) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,7 +57,9 @@ ActiveRecord::Schema.define(version: 20150119072218) do
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "custom_comments_count", default: 0
+    t.integer  "custom_comments_count",      default: 0
+    t.integer  "hide_custom_comments_count", default: 0
+    t.integer  "show_custom_comments_count", default: 0
   end
 
   create_table "main_models", force: true do |t|
@@ -77,7 +79,9 @@ ActiveRecord::Schema.define(version: 20150119072218) do
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "comments_count", default: 0
+    t.integer  "comments_count",         default: 0
+    t.integer  "private_comments_count", default: 0
+    t.integer  "public_comments_count",  default: 0
   end
 
   create_table "post_custom_asso_names", force: true do |t|

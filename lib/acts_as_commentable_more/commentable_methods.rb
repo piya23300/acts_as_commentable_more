@@ -1,11 +1,13 @@
 require 'acts_as_commentable_more/helpers/associations_helper'
 require 'acts_as_commentable_more/helpers/methods_helper'
+require 'acts_as_commentable_more/helpers/callbacks_helper'
 
 module ActsAsCommentableMore
   extend ActiveSupport::Concern
 
   module ClassMethods
     include Helpers::AssociationsHelper
+    include Helpers::CallbacksHelper
     include Helpers::MethodsHelper
 
     def acts_as_commentable(types: [], options: {}, as: nil)
@@ -62,6 +64,10 @@ module ActsAsCommentableMore
             #{define_to_role!(role)}
           }
         end
+
+        # counter cache for comment model
+        define_counter_cache_callback(association_class, association_options[:as])
+
       end
     end
 
