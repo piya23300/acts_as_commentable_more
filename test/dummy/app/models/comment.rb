@@ -10,7 +10,7 @@ class Comment < ActiveRecord::Base
 
   include ActsAsCommentableMore::Finders
 
-  belongs_to :commentable, polymorphic: true, counter_cache: true
+  belongs_to :commentable, polymorphic: true
   belongs_to :user, polymorphic: true
 
   ###################################################################

@@ -10,7 +10,7 @@ class DisableCacheComment < ActiveRecord::Base
 
   include ActsAsCommentableMore::Finders
 
-  belongs_to :disable_cache_commentable, polymorphic: true, counter_cache: false
+  belongs_to :disable_cache_commentable, polymorphic: true
   belongs_to :user, polymorphic: true
 
   ###################################################################
