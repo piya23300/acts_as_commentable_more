@@ -12,6 +12,16 @@ acts_as_commentable_more develops from [acts_as_commentable](https://github.com/
 
 Thank you very much for way and inspiration.
 
+### What acts_as_commentable_more bring "more"
+1. It has friendly method for usage developer
+2. It has flexible method's name
+3. It has many functions
+    * any user's type of comment in the same table
+    * any object owner of comment in the same table
+    * cache comment counts
+    * [future] reply comment
+
+
 ### Generator
 
 Generate model and migration
@@ -111,10 +121,11 @@ private_comment.to_public! #save
 ```
 
 ### Cache Counter
-You can enable at ```counter_cache``` from your comment model
+You can enable at ```counter_cache```
 ```ruby
-belongs_to :commentable, polymorphic: true, counter_cache: true
+acts_as_commentable counter_cache: true # default true
 ```
+Note. Don't enable at ```belongs_to``` of ```youre_comment Model```
 
 Posts table add a field
 ```ruby
