@@ -1,16 +1,17 @@
-require 'acts_as_commentable_more/helpers/associations_helper'
-require 'acts_as_commentable_more/helpers/methods_helper'
-require 'acts_as_commentable_more/helpers/callbacks_helper'
+Dir[File.dirname(__FILE__) + "/helpers/**/*.rb"].each {|file| require file }
 
 module ActsAsCommentableMore
   extend ActiveSupport::Concern
 
   module ClassMethods
-    include Helpers::AssociationsHelper
-    include Helpers::CallbacksHelper
-    include Helpers::MethodsHelper
+    include Helpers::Post::AssociationsHelper
+    include Helpers::Post::MethodsHelper
+    include Helpers::Post::ScopesHelper
+    include Helpers::Comment::CallbacksHelper
+    include Helpers::Comment::MethodsHelper
 
     def acts_as_commentable(types: [], options: {}, as: nil)
+      mattr_accessor :comment_model
       mattr_accessor :comment_roles
 
       default_options = {as: :commentable, dependent: :destroy, class_name: 'Comment'}
@@ -20,53 +21,41 @@ module ActsAsCommentableMore
       types = types.flatten.compact.map(&:to_sym)
 
       association_options = default_options.merge(options.compact)
-      association_base_name = (as || default_as).to_s.pluralize
-      self.comment_roles = types.present? ? types : [association_base_name.to_s.singularize.to_sym]
+      association_comment_name = (as || default_as).to_s.pluralize
+      self.comment_roles = types.present? ? types : [association_comment_name.to_s.singularize.to_sym]
+      self.comment_model = association_options[:class_name].classify.constantize
 
       if comment_roles.size == 1
-        define_role_based_inflection(comment_roles.first, association_base_name, association_options)
-        define_create_role_comments(association_base_name)
+        ###########################
+        ###    basic comment    ###
+        ###########################
+        define_role_based_inflection(comment_roles.first, association_comment_name, association_options)
+        define_create_role_comments(association_comment_name)
       else
+        ###########################
+        ### many roles comment  ###
+        ###########################
+
+        # scope method for post model
+        define_all_comments_scope(association_comment_name, association_options[:as])
+
         comment_roles.each do |role|
-          association_name = "#{role.to_s}_#{association_base_name.to_s}"
+
+          # association for post model
+          association_name = "#{role.to_s}_#{association_comment_name.to_s}"
           define_role_based_inflection(role, association_name, association_options)
+
+          # support method for comment model
           define_create_role_comments(association_name)
+          define_is_role?(role)
+          define_to_role(role)
+          define_to_role!(role)
         end
 
-        association_class = association_options[:class_name].classify.constantize
-
-        class_eval %{
-          def all_#{association_base_name.to_s}
-            #{association_class}
-            .includes("#{association_options[:as].to_sym}",:user)
-            .where(
-              #{association_options[:as].to_s + '_id'}: self.id,
-              #{association_options[:as].to_s + '_type'}: self.class.base_class.name
-            ).order(created_at: :desc)
-          end
-        }
-
-        association_class.class_eval %{
-          private
-
-          def can_change_role?(role)
-            commentable_class = #{association_options[:as]}.class
-            limit_role = commentable_class.comment_roles
-            limit_role.include?(role.to_sym)
-          end
-
-        }
-
-        comment_roles.each do |role|
-          association_class.class_eval %{
-            #{define_is_role?(role)}
-            #{define_to_role(role)}
-            #{define_to_role!(role)}
-          }
-        end
-
+        # helpper method for comment model
+        define_can_change_role_of(association_options[:as])
         # counter cache for comment model
-        define_counter_cache_role_comment_callback(association_class, association_options[:as])
+        define_counter_cache_role_comment_callback(comment_model, association_options[:as])
 
       end
     end
