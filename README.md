@@ -12,6 +12,16 @@ acts_as_commentable_more develops from [acts_as_commentable](https://github.com/
 
 Thank you very much for way and inspiration.
 
+### What acts_as_commentable_more bring "more"
+1. It has friendly method for usage developer
+2. It has flexible method's name
+3. It has many functions
+    * any user's type of comment in the same table
+    * any object owner of comment in the same table
+    * cache comment counts
+    * [future] reply comment
+
+
 ### Generator
 
 Generate model and migration
@@ -108,6 +118,34 @@ private_comment.is_public? #false
 #Changed type of comment
 private_comment.to_public #not save
 private_comment.to_public! #save
+```
+
+### Cache Counter
+You can enable at ```counter_cache```
+```ruby
+acts_as_commentable counter_cache: true # default true
+```
+Note. Don't enable at ```belongs_to``` of ```youre_comment Model```
+
+Posts table add a field
+```ruby
+class AddCommentsCountToPost < ActiveRecord::Migration
+  def change
+    add_column :posts, :comments_count, :integer, default: 0
+  end
+end
+```
+
+if you would like to have many types
+```ruby
+add_column :posts, :comments_count, :integer, default: 0
+add_column :posts, :private_comments_count, :integer, default: 0
+add_column :posts, :public_comments_count, :integer, default: 0
+```
+
+if you adjust association class name. you have to add
+```ruby
+add_column :posts, :{table name of comment that setting}_count, :integer, default: 0
 ```
 
 ### Related Attributes of Comment
