@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
 
-  s.files         = `git ls-files lib/acts_as_commentable_more`.split("\n")
+  # s.files         = `git ls-files lib/acts_as_commentable_more`.split("\n")
   s.test_files    = `git ls-files **/spec/**/*_spec.rb`.split("\n")
   # s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
