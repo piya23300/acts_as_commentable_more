@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/acts_as_commentable_more.svg)](http://badge.fury.io/rb/acts_as_commentable_more)
 [![Build Status](https://travis-ci.org/piya23300/acts_as_commentable_more.svg)](https://travis-ci.org/piya23300/acts_as_commentable_more)
 [![Dependency Status](https://gemnasium.com/piya23300/acts_as_commentable_more.svg)](https://gemnasium.com/piya23300/acts_as_commentable_more)
+[![Code Climate](https://codeclimate.com/github/piya23300/acts_as_commentable_more/badges/gpa.svg)](https://codeclimate.com/github/piya23300/acts_as_commentable_more)
 [![Coverage Status](https://coveralls.io/repos/piya23300/acts_as_commentable_more/badge.svg)](https://coveralls.io/r/piya23300/acts_as_commentable_more)
 
 ---
@@ -10,6 +11,16 @@
 acts_as_commentable_more develops from [acts_as_commentable](https://github.com/jackdempsey/acts_as_commentable).
 
 Thank you very much for way and inspiration.
+
+### What acts_as_commentable_more bring "more"
+1. It has friendly method for usage developer
+2. It has flexible method's name
+3. It has many functions
+    * any user's type of comment in the same table
+    * any object owner of comment in the same table
+    * cache comment counts
+    * [future] reply comment
+
 
 ### Generator
 
@@ -21,19 +32,20 @@ rails generate commentable your_model_name
 
 ### Basic Usege
 ### Setting
-Model would like to have commentable.
+Model would like to have comments.
 
 ```ruby
-    class Post < ActiveRecord::Base
-    acts_as_commentable # default options types: [:comment], options: { class_name: 'Comment', as: :commentable }, as: :comments
-  end
+class Post < ActiveRecord::Base
+  acts_as_commentable # default options types: [:comment], options: { class_name: 'Comment', as: :commentable }, as: :comments
+end
 ```
 
+usage
 ```ruby
 post = Post.create #<Post>
 
 #get all comments of post
-comments = post.comments #<ActiveRecord::Associations::CollectionProxy []>
+comments = post.comments #[<Comemnt>]
 
 #create comment of post
 comment = post.creates_comments(message: 'new message') #<Comment>
@@ -108,17 +120,83 @@ private_comment.to_public #not save
 private_comment.to_public! #save
 ```
 
-### Options
+### Cache Counter
+You can enable at ```counter_cache```
 ```ruby
-acts_as_commentable types: [:show, :hide], options: { class_name: 'CustomComment', as: :custom_commentable }, as: notes
+acts_as_commentable counter_cache: true # default true
+```
+Note. Don't enable at ```belongs_to``` of ```youre_comment Model```
+
+Posts table add a field
+```ruby
+class AddCommentsCountToPost < ActiveRecord::Migration
+  def change
+    add_column :posts, :comments_count, :integer, default: 0
+  end
+end
 ```
 
-- type : type of comment #array
+if you would like to have many types
+```ruby
+add_column :posts, :comments_count, :integer, default: 0
+add_column :posts, :private_comments_count, :integer, default: 0
+add_column :posts, :public_comments_count, :integer, default: 0
+```
+
+if you adjust association class name. you have to add
+```ruby
+add_column :posts, :{table name of comment that setting}_count, :integer, default: 0
+```
+
+### Related Attributes of Comment
+support Postgrasql only
+```ruby
+post = Post.create
+
+comment = post.creates_comments(related_attributes: {ip_address: "xxx.xxx.xxx"})
+comment.related_attributes[:ip_address] #"xxx.xxx.xxx"
+```
+
+### Options
+```ruby
+acts_as_commentable types: [:comment], options: { class_name: 'Comment', as: :commentable }, as: :comments
+```
+
+- types : type of comment #array
 - options : association options #hash
     - class_name : class name of comment
     - as : polymorephic name
 - as : name of association
 
+#### :as option
+It change suffix name of all method.
+
+```ruby
+    class Post < ActiveRecord::Base
+    acts_as_commentable as: :notes, types: [:private, :public], default options: { class_name: 'Comment', as: :commentable }
+  end
+```
+
+usage
+```ruby
+post = Post.create #<Post>
+
+#get all private notes of post
+private_notes = post.private_notes #[<Comment role: 'private'>]
+
+#get all public notes of post
+public_notes = post.public_notes #[<Comment role: 'public'>]
+
+#get all notes of post
+notes = post.all_notes #[<Comment>]
+
+#create private notes
+private_note = post.creates_private_notes(message: 'private message') #<Comment role: 'private'>
+
+#create public notes
+public_note = post.creates_public_notes(message: 'public message') #<Comment role: 'public'>
+
+```
 
 
 ## LICENSE

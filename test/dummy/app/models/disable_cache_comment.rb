@@ -1,8 +1,8 @@
 
-class CustomComment < ActiveRecord::Base
+class DisableCacheComment < ActiveRecord::Base
   ###################################################################
   ### To implement commentable add the following line to your model
-  ### acts_as_commentable types: [:hide, :show], options: { class_name: 'CustomComment', as: :custom_commentable }
+  ### acts_as_commentable types: [:hide, :show], options: { class_name: 'DisableCacheComment', as: :disable_cache_commentable }, as: :disablecachecomments
   
   ### types is an array of possible comment type
   ### for example if you have public and private comment
@@ -10,7 +10,7 @@ class CustomComment < ActiveRecord::Base
 
   include ActsAsCommentableMore::Finders
 
-  belongs_to :custom_commentable, polymorphic: true
+  belongs_to :disable_cache_commentable, polymorphic: true
   belongs_to :user, polymorphic: true
 
   ###################################################################

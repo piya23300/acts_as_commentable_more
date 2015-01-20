@@ -2,7 +2,7 @@
 class <%= class_name %> < ActiveRecord::Base
   ###################################################################
   ### To implement commentable add the following line to your model
-  ### acts_as_commentable types: [:hide, :show], options: { class_name: '<%= class_name %>', as: :<%= class_name.demodulize.underscore + "able" %> }, as: :<%= class_name.demodulize.downcase.pluralize %>
+  ### acts_as_commentable types: [:hide, :show], options: { class_name: '<%= class_name %>', as: :<%= class_name.demodulize.underscore + "able" %> }, as: :<%= class_name.demodulize.downcase.pluralize, counter_cache: true %>
   
   ### types is an array of possible comment type
   ### for example if you have public and private comment

@@ -1,5 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe NoteCustomAssoName, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it { should have_many(:private_custom_comments).dependent(:destroy).class_name('Comment').conditions(role: 'private') }
+  it { should have_many(:public_custom_comments).dependent(:destroy).class_name('Comment').conditions(role: 'public') }
 end

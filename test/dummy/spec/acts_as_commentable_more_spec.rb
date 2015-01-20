@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe ActsAsCommentableMore do
 
   describe "managed basic comment" do
+
     it "add a comment" do
       post = create(:post)
       expect{post.comments.create(message: 'my message')}.to change(Comment, :count).by(1)
@@ -160,30 +161,47 @@ RSpec.describe ActsAsCommentableMore do
       end
     end
 
-    it "#to_role to change only" do
-      note = create(:note)
-      private_comment = note.private_comments.create(message: 'private message')
-      private_comment.to_public
-      expect(private_comment.role).to eq 'public'
-      private_comment.reload
-      expect(private_comment.role).to eq 'private'
-    end
-    it "#to_role! to change and update" do
-      note = create(:note)
-      private_comment = note.private_comments.create(message: 'private message')
-      private_comment.to_public!
-      expect(private_comment.role).to eq 'public'
-      private_comment.reload
-      expect(private_comment.role).to eq 'public'
+    describe "#to_role" do
+      before do
+        @note = create(:note)
+        @private_comment = @note.private_comments.create(message: 'private message')
+      end
+      it "change only" do
+        @private_comment.to_public
+        expect(@private_comment.role).to eq 'public'
+        @private_comment.reload
+        expect(@private_comment.role).to eq 'private'
+      end
+
+      it "returns object" do
+        expect(@private_comment.to_public).to be_a(Comment)
+      end
     end
 
-    it "#is_role? to check role value" do
-      note = create(:note)
-      private_comment = note.private_comments.create(message: 'private message')
-      expect(private_comment.is_private?).to eq true
-      expect(private_comment.is_public?).to eq false
+    describe "#to_role!" do
+      before do
+        @note = create(:note)
+        @private_comment = @note.private_comments.create(message: 'private message')
+      end
+      it "change and update" do
+        @private_comment.to_public!
+        expect(@private_comment.role).to eq 'public'
+        @private_comment.reload
+        expect(@private_comment.role).to eq 'public'
+      end
+      it "returns object" do
+        expect(@private_comment.to_public!).to be_a(Comment)
+      end
     end
-    
+
+    describe "#is_role?" do
+      it "check role value" do
+        note = create(:note)
+        private_comment = note.private_comments.create(message: 'private message')
+        expect(private_comment.is_private?).to eq true
+        expect(private_comment.is_public?).to eq false
+      end
+    end
 
     describe "class helper" do
       context "self.find_comments_by_user(user, role: nil)" do
@@ -197,7 +215,7 @@ RSpec.describe ActsAsCommentableMore do
           admin_comment_note_1 = note_1.public_comments.create(message: 'public message admin', user: @admin)
         end
 
-        it "findby user and role=nil" do
+        it "find by user and role=nil" do
           Comment.find_comments_by_user(@user).each do |comment|
             expect(comment.user).to eq @user
             expect(comment.role).to eq('private').or eq('public')
@@ -270,6 +288,93 @@ RSpec.describe ActsAsCommentableMore do
       expect{note_custom.creates_private_comments()}.to raise_error(NoMethodError)
     end
 
+  end
+
+  describe "STI Subclass" do
+    it "add class_name not base_name for owner type" do
+      sub_model = SubModel.create
+      comment = sub_model.comments.create(message: 'sub post')
+      expect(comment.commentable_type).to eq sub_model.class.name
+    end
+  end
+
+  describe "cache comment counts" do
+
+    it "counter fields read only" do
+      post = Post.create
+      comment = post.comments.create
+      post.update(comments_count: 999)
+      post.reload
+      expect(post.comments_count).to eq 1
+    end
+
+    context "counter all comments counter" do
+      context "not roles" do
+        before do
+          @post = create(:post)
+          @comments = @post.comments.create([{message: 'comment 1'}, {message: 'comment 2'}])
+          @post.reload
+        end
+        it "increased", dd: true do
+          expect(@post.comments_count).to eq 2
+        end
+        it "decreased" do
+          @comments.last.destroy
+          @post.reload
+          expect(@post.comments_count).to eq 1
+        end
+      end
+
+      context "association options class_name" do
+        before do
+          @letter = create(:letter)
+          @hide_comments = @letter.hide_comments.create([{message: 'hide letter 1'}, {message: 'hide letter 2'}])
+          @show_comments = @letter.show_comments.create([{message: 'show letter 1'}, {message: 'show letter 2'}])
+          @letter.reload
+        end
+        it "increased" do
+          expect(@letter.hide_custom_comments_count).to eq 2
+          expect(@letter.show_custom_comments_count).to eq 2
+          expect(@letter.custom_comments_count).to eq 4
+        end
+        it "decreased" do
+          @hide_comments.last.destroy
+          @letter.reload
+          expect(@letter.hide_custom_comments_count).to eq 1
+          expect(@letter.show_custom_comments_count).to eq 2
+          expect(@letter.custom_comments_count).to eq 3
+        end
+      end
+
+      it "disable" do
+        post = create(:post_disable_cach)
+        comment = post.comments.create
+        post.reload
+        expect(post.disable_cache_commentable_count).to eq 0
+      end
+    end
+
+    context "counter many roles" do
+      before do
+        @note = create(:note)
+        @private_comments = @note.private_comments.create([{message: 'private comment 1'}, {message: 'private comment 2'}])
+        @public_comments = @note.public_comments.create([{message: 'public comment 1'}, {message: 'public comment 2'}])
+        @note.reload
+      end
+      it "increased" do
+        expect(@note.private_comments_count).to eq 2
+        expect(@note.public_comments_count).to eq 2
+        expect(@note.comments_count).to eq 4
+      end
+      it "decreased" do
+        @private_comments.last.destroy
+        @note.reload
+        expect(@note.private_comments_count).to eq 1
+        expect(@note.public_comments_count).to eq 2
+        expect(@note.comments_count).to eq 3
+      end
+    end
+    
   end
 
 end

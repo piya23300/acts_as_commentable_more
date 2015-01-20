@@ -1,5 +1,5 @@
 require 'rails_helper'
 
 RSpec.describe Topic, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it { should have_many(:comments).dependent(:destroy).class_name('CustomComment').conditions(role: 'comment') }
 end
