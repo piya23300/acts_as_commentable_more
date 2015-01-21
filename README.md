@@ -125,7 +125,7 @@ You can enable at ```counter_cache```
 ```ruby
 acts_as_commentable counter_cache: true # default true
 ```
-Note. Don't enable at ```belongs_to``` of ```youre_comment Model```
+Note. Don't enable at ```belongs_to``` of ```your_comment Model```
 
 Posts table add a field
 ```ruby
@@ -145,7 +145,15 @@ add_column :posts, :public_comments_count, :integer, default: 0
 
 if you adjust association class name. you have to add
 ```ruby
-add_column :posts, :{table name of comment that setting}_count, :integer, default: 0
+add_column :posts, :{model name of comment that setting}_count, :integer, default: 0
+```
+example
+```ruby
+acts_as_commentable options: {class_name: "MyNameSpace::Note"}
+```
+you have to add
+```ruby
+add_column :posts, :note_count, :integer, default: 0
 ```
 
 ### Related Attributes of Comment
