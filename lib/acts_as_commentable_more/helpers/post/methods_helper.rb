@@ -5,9 +5,9 @@ module ActsAsCommentableMore
 
         private
 
-        def define_create_role_comments(association_name)
-          redefine_method("creates_#{association_name.to_s.pluralize}") do |attributes = nil|
-            send(association_name).create(attributes)
+        def define_create_role_comments(association_comment_name)
+          redefine_method("creates_#{association_comment_name.to_s.pluralize}") do |attributes = nil|
+            send(association_comment_name).create(attributes)
           end
         end
 

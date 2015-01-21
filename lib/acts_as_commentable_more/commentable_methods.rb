@@ -15,14 +15,12 @@ module ActsAsCommentableMore
       mattr_accessor :comment_roles
 
       default_options = {as: :commentable, dependent: :destroy, class_name: 'Comment'}
-      default_as = :comments
-      default_roles = [default_as.to_s.singularize.to_sym]
 
       types = types.flatten.compact.map(&:to_sym)
 
       association_options = default_options.merge(options.compact)
-      association_comment_name = (as || default_as).to_s.pluralize
-      self.comment_roles = types.present? ? types : [association_comment_name.to_s.singularize.to_sym]
+      association_comment_name = (as || association_options[:class_name].demodulize.underscore.to_sym).to_s.pluralize
+      self.comment_roles = types.present? ? types : [association_comment_name.singularize.to_sym]
       self.comment_model = association_options[:class_name].classify.constantize
       enable_counter_cache = counter_cache
 
@@ -54,7 +52,7 @@ module ActsAsCommentableMore
       end
 
        # counter cache for comment model
-      define_counter_cache_role_comment_callback(association_options[:as]) if enable_counter_cache
+      define_counter_cache_role_comment_callback(association_comment_name, association_options[:as]) if enable_counter_cache
 
     end
 

@@ -5,7 +5,7 @@ module ActsAsCommentableMore
 
         private
 
-        def define_counter_cache_role_comment_callback commentable_name
+        def define_counter_cache_role_comment_callback association_comment_name, commentable_name
           never_has_counter_cache = !comment_model._create_callbacks.select {|cb| cb.kind == :after }.collect(&:filter).include?(:acts_as_commentable_more_increment!)
 
           if never_has_counter_cache
@@ -15,8 +15,7 @@ module ActsAsCommentableMore
             end
 
             comment_model.redefine_method("acts_as_commentable_more_increment!") do
-              comment_table_name = self.class.table_name
-              all_counter_field = "#{comment_table_name}_count"
+              all_counter_field = "#{association_comment_name}_count"
               role_counter_field = "#{self.role.to_s}_#{all_counter_field}"
               post_model = self.send("#{commentable_name}_type").classify.constantize
               attributes_post = post_model.column_names
@@ -31,8 +30,7 @@ module ActsAsCommentableMore
             comment_model.send(:private, "acts_as_commentable_more_increment!".to_sym)
 
             comment_model.redefine_method("acts_as_commentable_more_decrement!") do
-              comment_table_name = self.class.table_name
-              all_counter_field = "#{comment_table_name}_count"
+              all_counter_field = "#{association_comment_name}_count"
               role_counter_field = "#{self.role.to_s}_#{all_counter_field}"
               post_model = self.send("#{commentable_name}_type").classify.constantize
               attributes_post = post_model.column_names

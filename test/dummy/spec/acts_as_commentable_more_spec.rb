@@ -75,15 +75,15 @@ RSpec.describe ActsAsCommentableMore do
   describe "managed comments with association options(:class_name and :as)" do
     it "add a comment" do
       topic = create(:topic)
-      comment = topic.comments.build(message: 'my message')
+      comment = topic.custom_comments.build(message: 'my message')
       expect{comment.save}.to change(CustomComment, :count).by(1)
-      expect(comment.role).to eq 'comment'
+      expect(comment.role).to eq 'custom_comment'
     end
     it "gets all comment" do
       topics = create_list(:topic, 2)
       topics.each do |topic|
-        5.times { |i| topic.comments.create(message: "message #{i}") }
-        expect(topic.comments.count).to eq 5
+        5.times { |i| topic.custom_comments.create(message: "message #{i}") }
+        expect(topic.custom_comments.count).to eq 5
       end
       expect(CustomComment.count).to eq 10
     end
@@ -91,8 +91,8 @@ RSpec.describe ActsAsCommentableMore do
       topic = create(:topic)
       admin = create(:admin)
       user = create(:user)
-      user_comment = topic.comments.create(message: 'my message', user: user)
-      admin_comment = topic.comments.create(message: 'my message', user: admin)
+      user_comment = topic.custom_comments.create(message: 'my message', user: user)
+      admin_comment = topic.custom_comments.create(message: 'my message', user: admin)
       expect(user_comment.user).to eq user
       expect(admin_comment.user).to eq admin
     end
@@ -114,13 +114,13 @@ RSpec.describe ActsAsCommentableMore do
 
       it "custom association options" do
         letter = create(:letter)
-        5.times { |i| letter.hide_comments.create(message: 'hide message') }
-        8.times { |i| letter.show_comments.create(message: 'show message') }
+        5.times { |i| letter.hide_custom_comments.create(message: 'hide message') }
+        8.times { |i| letter.show_custom_comments.create(message: 'show message') }
 
         other_letter = create(:letter)
-        5.times { |i| other_letter.show_comments.create(message: 'show message') }
+        5.times { |i| other_letter.show_custom_comments.create(message: 'show message') }
         
-        expect(letter.all_comments.count).to eq 13
+        expect(letter.all_custom_comments.count).to eq 13
       end
       
     end
@@ -310,7 +310,7 @@ RSpec.describe ActsAsCommentableMore do
 
     it "disable" do
       post = create(:post_disable_cach)
-      comment = post.comments.create
+      comment = post.disable_cache_comments.create
       post.reload
       expect(post.disable_cache_commentable_count).to eq 0
     end
@@ -340,8 +340,8 @@ RSpec.describe ActsAsCommentableMore do
       context "association options class_name" do
         before do
           @letter = create(:letter)
-          @hide_comments = @letter.hide_comments.create([{message: 'hide letter 1'}, {message: 'hide letter 2'}])
-          @show_comments = @letter.show_comments.create([{message: 'show letter 1'}, {message: 'show letter 2'}])
+          @hide_comments = @letter.hide_custom_comments.create([{message: 'hide letter 1'}, {message: 'hide letter 2'}])
+          @show_comments = @letter.show_custom_comments.create([{message: 'show letter 1'}, {message: 'show letter 2'}])
           @letter.reload
         end
         it "increased" do
