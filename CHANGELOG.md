@@ -1,4 +1,7 @@
 # Change Log
+**1.2.3 (21/01/2015)**
+
+- fixed error when migration 
 
 **1.2.2 (21/01/2015)**
 

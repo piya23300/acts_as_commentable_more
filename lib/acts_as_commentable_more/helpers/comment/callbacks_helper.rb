@@ -47,7 +47,12 @@ module ActsAsCommentableMore
 
           # setting attributes for read only
           post_model = self
-          counter_fields = post_model.column_names.select { |column| column =~ /.*(_count)$/ }
+          counter_fields = ["#{association_comment_name.to_s}_count"]
+          if post_model.comment_roles.size > 1
+            post_model.comment_roles.each do |role|
+              counter_fields << "#{role.to_s}_#{association_comment_name.to_s}_count"
+            end
+          end
           post_model.attr_readonly(*counter_fields)
         end
 
