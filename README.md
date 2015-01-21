@@ -145,7 +145,7 @@ add_column :posts, :public_comments_count, :integer, default: 0
 
 if you adjust association class name. you have to add
 ```ruby
-add_column :posts, :{model name of comment that setting}_count, :integer, default: 0
+add_column :posts, :{plural model name of comment that setting}_count, :integer, default: 0
 ```
 example
 ```ruby
@@ -153,7 +153,7 @@ acts_as_commentable options: {class_name: "MyNameSpace::Note"}
 ```
 you have to add
 ```ruby
-add_column :posts, :note_count, :integer, default: 0
+add_column :posts, :notes_count, :integer, default: 0
 ```
 
 ### Related Attributes of Comment
