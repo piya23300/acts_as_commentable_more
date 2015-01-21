@@ -1,5 +1,11 @@
 # Change Log
 
+**1.2.2 (21/01/2015)**
+
+- fixed association name when it adjust association class_name
+- fixed bugs cache counter when model has namespace
+
+
 **1.2.1 (21/01/2015)**
 
 - fixed bugs cache counter when post doesn't have any counter fields
