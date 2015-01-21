@@ -26,7 +26,7 @@ module ActsAsCommentableMore
               counter_fields.merge!(role_counter_field.to_sym => 1) if attributes_post.include?(role_counter_field)
 
               post_id = self.send("#{commentable_name}_id")
-              post_model.update_counters(post_id, counter_fields)
+              post_model.update_counters(post_id, counter_fields) if counter_fields.present?
             end
             comment_model.send(:private, "acts_as_commentable_more_increment!".to_sym)
 
@@ -42,9 +42,9 @@ module ActsAsCommentableMore
               counter_fields.merge!(role_counter_field.to_sym => -1) if attributes_post.include?(role_counter_field)
 
               post_id = self.send("#{commentable_name}_id")
-              post_model.update_counters(post_id, counter_fields)
+              post_model.update_counters(post_id, counter_fields) if counter_fields.present?
             end
-            comment_model.send(:private, "acts_as_commentable_more_decrement!".to_sym)
+            comment_model.send(:private, "acts_as_commentable_more_decrement!".to_sym) 
           end
 
           # setting attributes for read only

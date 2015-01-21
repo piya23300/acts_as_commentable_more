@@ -308,6 +308,18 @@ RSpec.describe ActsAsCommentableMore do
       expect(post.comments_count).to eq 1
     end
 
+    it "disable" do
+      post = create(:post_disable_cach)
+      comment = post.comments.create
+      post.reload
+      expect(post.disable_cache_commentable_count).to eq 0
+    end
+
+    it "doesn't have any counter fields" do
+      post_not_counter_field = create(:post_not_counter_field)
+      expect{ post_not_counter_field.comments.create }.not_to raise_error
+    end
+
     context "counter all comments counter" do
       context "not roles" do
         before do
@@ -346,12 +358,6 @@ RSpec.describe ActsAsCommentableMore do
         end
       end
 
-      it "disable" do
-        post = create(:post_disable_cach)
-        comment = post.comments.create
-        post.reload
-        expect(post.disable_cache_commentable_count).to eq 0
-      end
     end
 
     context "counter many roles" do

@@ -1,6 +1,10 @@
 # Change Log
 
-**1.2 now**
+**1.2.1 (21/01/2015)**
+
+- fixed bugs cache counter when post doesn't have any counter fields
+
+**1.2.0 (20/01/2015)**
 
 - [Feature] counter cache comments
 
