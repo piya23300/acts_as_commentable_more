@@ -1,6 +1,6 @@
 # Change Log
 
-**1.2.4 now**
+**1.2.4 (27/01/2015)**
 
 - fixed cache counter when a comment was changed the role
 
