@@ -7,7 +7,7 @@ module ActsAsCommentableMore
     include Helpers::Post::AssociationsHelper
     include Helpers::Post::MethodsHelper
     include Helpers::Post::ScopesHelper
-    include Helpers::Comment::CallbacksHelper
+    include Helpers::Comment::CacheCounterHelper
     include Helpers::Comment::MethodsHelper
 
     def acts_as_commentable(types: [], options: {}, as: nil, counter_cache: true)

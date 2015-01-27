@@ -380,6 +380,28 @@ RSpec.describe ActsAsCommentableMore do
         expect(@note.comments_count).to eq 3
       end
     end
+
+    context "when a comment was changed the role" do
+      before do
+        @note = create(:note)
+        @private_comment_1 = @note.private_comments.create(message: 'private message 1')
+        @private_comment_2 = @note.private_comments.create(message: 'private message 2')
+        @note.reload
+      end
+
+      it "increased counter of new role" do
+        expect(@note.public_comments_count).to eq 0
+        @private_comment_1.to_public!
+        @note.reload
+        expect(@note.public_comments_count).to eq 1
+      end
+      it "decreased counter of old role" do
+        expect(@note.private_comments_count).to eq 2
+        @private_comment_1.to_public!
+        @note.reload
+        expect(@note.private_comments_count).to eq 1
+      end
+    end
     
   end
 
