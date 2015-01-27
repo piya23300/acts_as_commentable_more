@@ -1,4 +1,9 @@
 # Change Log
+
+**1.2.4 now**
+
+- fixed cache counter when a comment was changed the role
+
 **1.2.3 (21/01/2015)**
 
 - fixed error when migration 
