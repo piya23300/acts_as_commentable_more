@@ -1,7 +1,4 @@
 module ActsAsCommentableMore
-  require 'acts_as_commentable_more/commentable_methods'
-  require 'acts_as_commentable_more/comment_methods'
-
+  require_relative 'acts_as_commentable_more/commentable_methods'
   ActiveRecord::Base.send(:include, ActsAsCommentableMore)
-
 end

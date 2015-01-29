@@ -5,7 +5,7 @@ module ActsAsCommentableMore
 
         private
 
-        def define_counter_cache_role_comment_callback association_comment_name, commentable_name
+        def comment_define_counter_cache_role association_comment_name, commentable_name
           never_has_counter_cache = !comment_model._create_callbacks.select {|cb| cb.kind == :after }.collect(&:filter).include?(:acts_as_commentable_more_increment!)
 
           if never_has_counter_cache

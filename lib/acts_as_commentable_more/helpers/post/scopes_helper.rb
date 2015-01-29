@@ -3,7 +3,7 @@ module ActsAsCommentableMore
     module Post
       module ScopesHelper
 
-        def define_all_comments_scope comment_name, commentable
+        def post_define_all_scope comment_name, commentable
           redefine_method("all_#{comment_name.to_s}") do
             comment_model
             .includes(commentable.to_sym, :user)
