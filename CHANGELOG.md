@@ -1,5 +1,9 @@
 # Change Log
 
+**1.2.5 (11/05/2015)**
+
+- support rails 4.2.1
+
 **1.2.4 (27/01/2015)**
 
 - fixed cache counter when a comment was changed the role
