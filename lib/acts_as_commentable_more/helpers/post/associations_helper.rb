@@ -5,7 +5,7 @@ module ActsAsCommentableMore
 
         private
 
-        def define_role_based_inflection(role, association_comment_name, join_options)
+        def post_define_role_based_inflection(role, association_comment_name, join_options)
           send("define_role_based_inflection_#{Rails.version.first}", role, association_comment_name,join_options)
         end
 

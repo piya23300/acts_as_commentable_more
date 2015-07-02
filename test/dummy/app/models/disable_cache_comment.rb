@@ -8,8 +8,6 @@ class DisableCacheComment < ActiveRecord::Base
   ### for example if you have public and private comment
   ### your types would be [:public, :private]
 
-  include ActsAsCommentableMore::Finders
-
   belongs_to :disable_cache_commentable, polymorphic: true
   belongs_to :user, polymorphic: true
 

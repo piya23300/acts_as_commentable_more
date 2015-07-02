@@ -8,8 +8,6 @@ class <%= class_name %> < ActiveRecord::Base
   ### for example if you have public and private comment
   ### your types would be [:public, :private]
 
-  include ActsAsCommentableMore::Finders
-
   belongs_to :<%= class_name.demodulize.underscore + "able" %>, :polymorphic => true
   belongs_to :user, polymorphic: true
 
