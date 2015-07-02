@@ -16,6 +16,7 @@ gemspec
 gem "codeclimate-test-reporter", group: :test, require: nil
 
 group :development do
+  gem 'web-console', '~> 2.0'
   gem 'bullet',         '4.13.2'
   gem 'spring',         '1.1.3'
   gem 'mina',           '0.3.0'
