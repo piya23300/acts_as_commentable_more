@@ -256,6 +256,15 @@ RSpec.describe ActsAsCommentableMore do
       expect(comment.related_attributes[:location_name]).to eq 'Thailand'
     end
 
+    it "add related_attributes" do
+      note = create(:note)
+      comment = note.public_comments.create
+      comment.related_attributes = ({ test_1: 1 })
+      comment.related_attributes = ({ test_2: 2 })
+      expect(comment.related_attributes[:test_1].to_i).to eq 1
+      expect(comment.related_attributes[:test_2].to_i).to eq 2
+    end
+
   end
 
   describe "setting :as to custom association name" do
@@ -402,6 +411,7 @@ RSpec.describe ActsAsCommentableMore do
         expect(@note.private_comments_count).to eq 1
       end
     end
+    
     
   end
 
