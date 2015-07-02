@@ -1,5 +1,9 @@
 # Change Log
 
+**1.2.8 (02/07/2015)**
+
+- auto merge related_attributes when it's added new attr or update attr
+
 **1.2.7 (02/07/2015)**
 
 - fixed template generator
