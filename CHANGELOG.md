@@ -1,5 +1,10 @@
 # Change Log
 
+**1.2.5 (02/07/2015)**
+
+- refactoring code
+- support rails 4.2.3
+
 **1.2.5 (11/05/2015)**
 
 - support rails 4.2.1
