@@ -13,6 +13,8 @@ gemspec
 # To use debugger
 # gem 'debugger'
 
+gem 'rails', "~> 4.2.1"
+
 gem "codeclimate-test-reporter", group: :test, require: nil
 
 group :development do
