@@ -15,7 +15,6 @@ ActiveRecord::Schema.define(version: 20150121053001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
 
   create_table "admins", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -26,11 +25,10 @@ ActiveRecord::Schema.define(version: 20150121053001) do
   create_table "comments", force: :cascade do |t|
     t.text     "message"
     t.integer  "commentable_id"
-    t.string   "commentable_type",   limit: 255
+    t.string   "commentable_type", limit: 255
     t.integer  "user_id"
-    t.string   "user_type",          limit: 255
-    t.string   "role",               limit: 255
-    t.hstore   "related_attributes"
+    t.string   "user_type",        limit: 255
+    t.string   "role",             limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -45,7 +43,6 @@ ActiveRecord::Schema.define(version: 20150121053001) do
     t.integer  "user_id"
     t.string   "user_type",               limit: 255
     t.string   "role",                    limit: 255
-    t.hstore   "related_attributes"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -60,7 +57,6 @@ ActiveRecord::Schema.define(version: 20150121053001) do
     t.integer  "user_id"
     t.string   "user_type",                      limit: 255
     t.string   "role",                           limit: 255
-    t.hstore   "related_attributes"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
