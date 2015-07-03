@@ -4,6 +4,6 @@ class SubModel < MainModel
     self
   end
   
-  acts_as_commentable
+  acts_as_commentable :comments
   
 end

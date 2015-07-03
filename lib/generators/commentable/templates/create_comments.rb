@@ -8,7 +8,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration
       t.references :<%= class_name.demodulize.underscore + "able" %>, polymorphic: true
       t.references :user, polymorphic: true, index: true
       t.string :role, default: nil
-      t.hstore :related_attributes
+      t.hstore :related_attributes, default: ''
       t.timestamps
     end
 

@@ -10,53 +10,59 @@ module ActsAsCommentableMore
     include Helpers::Comment::CacheCounterHelper
     include Helpers::Comment::InstanceMethodsHelper
 
-    def acts_as_commentable(types: [], options: {}, as: nil, counter_cache: true)
-      mattr_accessor :comment_model
-      mattr_accessor :comment_roles
+    def acts_as_commentable(association_comment_name, *args)#types: [], options: {}, as: nil, counter_cache: true)
+      mattr_accessor :aacm_commentable_options
+      mattr_accessor :aacm_association_options
 
-      default_options = {as: :commentable, dependent: :destroy, class_name: 'Comment'}
+      default_commentable_options = { types: [], options: {}, as: nil, counter_cache: true }
+      default_association_options = { as: :commentable, dependent: :destroy, class_name: 'Comment' }
 
-      types = types.flatten.compact.map(&:to_sym)
+      self.aacm_commentable_options = default_commentable_options.merge(args.extract_options!)
+      self.aacm_association_options = default_association_options.merge(aacm_commentable_options[:options].compact)
 
-      association_options = default_options.merge(options.compact)
-      association_comment_name = (as || association_options[:class_name].demodulize.underscore.to_sym).to_s.pluralize
-      self.comment_roles = types.present? ? types : [association_comment_name.singularize.to_sym]
-      self.comment_model = association_options[:class_name].classify.constantize
-      enable_counter_cache = counter_cache
+      self.aacm_commentable_options[:association_comment_name] = association_comment_name.to_s
+      self.aacm_commentable_options[:types] = aacm_commentable_options[:types].flatten.compact
+      self.aacm_commentable_options[:comment_model] = aacm_association_options[:class_name].classify.constantize
+      self.aacm_commentable_options[:comment_roles] = if aacm_commentable_options[:types].present?
+                                                        aacm_commentable_options[:types]
+                                                      else
+                                                        [aacm_commentable_options[:association_comment_name].singularize]
+                                                      end.map(&:to_s)
 
-      if comment_roles.size == 1
+      if aacm_commentable_options[:comment_roles].size == 1
         ###########################
         ###    basic comment    ###
         ###########################
-        post_define_role_based_inflection(comment_roles.first, association_comment_name, association_options)
-        post_define_create_role(association_comment_name)
+        post_define_role_based_inflection(aacm_commentable_options[:comment_roles].first, aacm_commentable_options[:association_comment_name])
+        post_define_create_role(aacm_commentable_options[:association_comment_name])
       else
         ###########################
         ### many roles comment  ###
         ###########################
         # scope method for post model
-        post_define_all_scope(association_comment_name, association_options[:as])
+        post_define_all_scope
         
-        comment_roles.each do |role|
+        aacm_commentable_options[:comment_roles].each do |role|
           # association for post model
-          association_name = "#{role.to_s}_#{association_comment_name.to_s}"
-          post_define_role_based_inflection(role, association_name, association_options)
+          association_name = "#{role}_#{aacm_commentable_options[:association_comment_name]}"
+          post_define_role_based_inflection(role, association_name)
           # support method for comment model
           post_define_create_role(association_name)
-          comment_define_is_role?(role)
-          comment_define_to_role(role)
-          comment_define_to_role!(role)
+          comment_define_is_role?(aacm_commentable_options[:comment_model], role)
+          comment_define_to_role(aacm_commentable_options[:comment_model], role)
+          comment_define_to_role!(aacm_commentable_options[:comment_model], role)
         end
         # helpper method for comment model
-        comment_define_can_change_role_of(association_options[:as])
+        comment_define_can_change_role_of(aacm_commentable_options[:comment_model], aacm_association_options[:as])
       end
 
-       # counter cache for comment model
-      comment_define_counter_cache_role(association_comment_name, association_options[:as]) if enable_counter_cache
-
+      # counter cache for comment model
+      if aacm_commentable_options[:counter_cache]
+        comment_define_counter_cache_role(aacm_commentable_options[:comment_model], aacm_commentable_options[:association_comment_name], aacm_association_options[:as])
+      end
       # instance method for comment
-      comment_define_instance_method
-      comment_define_class_method
+      comment_define_instance_method(aacm_commentable_options[:comment_model])
+      comment_define_class_method(aacm_commentable_options[:comment_model])
     end
 
   end

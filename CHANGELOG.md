@@ -1,6 +1,20 @@
 # Change Log
 
-**1.2.5 (02/07/2015)**
+**1.2.9 (03/07/2015)**
+
+- changed parameters for `acts_as_commentable` setting 
+- refactoring code
+- updated readme
+
+**1.2.8 (02/07/2015)**
+
+- auto merge related_attributes when it's added new attr or update attr
+
+**1.2.7 (02/07/2015)**
+
+- fixed template generator
+
+**1.2.6 (02/07/2015)**
 
 - refactoring code
 - support rails 4.2.3
