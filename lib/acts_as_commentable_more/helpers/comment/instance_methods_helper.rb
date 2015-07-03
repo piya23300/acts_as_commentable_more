@@ -5,7 +5,7 @@ module ActsAsCommentableMore
 
         private
 
-        def comment_define_instance_method
+        def comment_define_instance_method(comment_model)
 
           comment_model.class_eval do
           
@@ -23,7 +23,7 @@ module ActsAsCommentableMore
 
         end
 
-        def comment_define_class_method
+        def comment_define_class_method(comment_model)
           
           comment_model.class_eval do
 
@@ -31,7 +31,7 @@ module ActsAsCommentableMore
 
               def find_comments_by_user(user, role = nil)
                 attr_finder = { user: user }
-                attr_finder.merge!(role: role.to_s) if role.present?
+                attr_finder.merge!(role: role) if role.present?
                 where(attr_finder).order(created_at: :desc)
               end
 
@@ -40,34 +40,34 @@ module ActsAsCommentableMore
 
         end
 
-        def comment_define_can_change_role_of(commentable_name)
+        def comment_define_can_change_role_of(comment_model, commentable_name)
           comment_model.redefine_method("can_change_role?") do |role|
             commentable_class = send(commentable_name).class
-            limit_role = commentable_class.comment_roles
-            limit_role.include?(role.to_sym)
+            limit_role = commentable_class.aacm_commentable_options[:comment_roles]
+            limit_role.include?(role)
           end
           comment_model.send(:private, "can_change_role?".to_sym)
         end
 
-        def comment_define_is_role?(role)
+        def comment_define_is_role?(comment_model, role)
           comment_model.redefine_method("is_#{role}?") do
-            raise(NoMethodError, "undefined method 'is_" + role.to_s + "?'") unless can_change_role?(role.to_s)
-            self.role == role.to_s
+            raise(NoMethodError, "undefined method 'is_" + role + "?'") unless can_change_role?(role)
+            self.role == role
           end
         end
 
-        def comment_define_to_role(role)
+        def comment_define_to_role(comment_model, role)
           comment_model.redefine_method("to_#{role}") do
-            raise(NoMethodError, "undefined method 'is_" + role.to_s + "?'") unless can_change_role?(role.to_s)
-            self.role = role.to_s
+            raise(NoMethodError, "undefined method 'is_" + role + "?'") unless can_change_role?(role)
+            self.role = role
             self
           end
         end
 
-        def comment_define_to_role!(role)
+        def comment_define_to_role!(comment_model, role)
           comment_model.redefine_method("to_#{role}!") do
-            raise(NoMethodError, "undefined method 'is_" + role.to_s + "?'") unless can_change_role?(role.to_s)
-            self.update(role: role.to_s)
+            raise(NoMethodError, "undefined method 'is_" + role + "?'") unless can_change_role?(role)
+            self.update(role: role)
             self
           end
         end

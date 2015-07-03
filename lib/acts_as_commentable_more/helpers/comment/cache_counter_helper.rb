@@ -5,7 +5,7 @@ module ActsAsCommentableMore
 
         private
 
-        def comment_define_counter_cache_role association_comment_name, commentable_name
+        def comment_define_counter_cache_role(comment_model, association_comment_name, commentable_name)
           never_has_counter_cache = !comment_model._create_callbacks.select {|cb| cb.kind == :after }.collect(&:filter).include?(:acts_as_commentable_more_increment!)
 
           if never_has_counter_cache
@@ -17,7 +17,7 @@ module ActsAsCommentableMore
 
             comment_model.redefine_method("acts_as_commentable_more_increment!") do
               all_counter_field = "#{association_comment_name}_count"
-              role_counter_field = "#{self.role.to_s}_#{all_counter_field}"
+              role_counter_field = "#{self.role}_#{all_counter_field}"
               post_model = self.send("#{commentable_name}_type").classify.constantize
               attributes_post = post_model.column_names
 
@@ -32,7 +32,7 @@ module ActsAsCommentableMore
 
             comment_model.redefine_method("acts_as_commentable_more_decrement!") do
               all_counter_field = "#{association_comment_name}_count"
-              role_counter_field = "#{self.role.to_s}_#{all_counter_field}"
+              role_counter_field = "#{self.role}_#{all_counter_field}"
               post_model = self.send("#{commentable_name}_type").classify.constantize
               attributes_post = post_model.column_names
 
@@ -64,10 +64,10 @@ module ActsAsCommentableMore
 
           # setting attributes for read only
           post_model = self
-          counter_fields = ["#{association_comment_name.to_s}_count"]
-          if post_model.comment_roles.size > 1
-            post_model.comment_roles.each do |role|
-              counter_fields << "#{role.to_s}_#{association_comment_name.to_s}_count"
+          counter_fields = ["#{association_comment_name}_count"]
+          if post_model.aacm_commentable_options[:comment_roles].size > 1
+            post_model.aacm_commentable_options[:comment_roles].each do |role|
+              counter_fields << "#{role}_#{association_comment_name}_count"
             end
           end
           post_model.attr_readonly(*counter_fields)
