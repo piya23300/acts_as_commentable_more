@@ -10,19 +10,22 @@ module ActsAsCommentableMore
     include Helpers::Comment::CacheCounterHelper
     include Helpers::Comment::InstanceMethodsHelper
 
-    def acts_as_commentable(types: [], options: {}, as: nil, counter_cache: true)
+    def acts_as_commentable(association_comment_name, *args)#types: [], options: {}, as: nil, counter_cache: true)
       mattr_accessor :comment_model
       mattr_accessor :comment_roles
 
-      default_options = {as: :commentable, dependent: :destroy, class_name: 'Comment'}
+      default_commentable_options = { types: [], options: {}, as: nil, counter_cache: true }
+      default_association_options = { as: :commentable, dependent: :destroy, class_name: 'Comment' }
 
-      types = types.flatten.compact.map(&:to_sym)
+      commentable_options = default_commentable_options.merge(args.extract_options!)
 
-      association_options = default_options.merge(options.compact)
-      association_comment_name = (as || association_options[:class_name].demodulize.underscore.to_sym).to_s.pluralize
-      self.comment_roles = types.present? ? types : [association_comment_name.singularize.to_sym]
+      commentable_options[:types] = commentable_options[:types].flatten.compact.map(&:to_sym)
+
+      association_options = default_association_options.merge(commentable_options[:options].compact)
+      association_comment_name = association_comment_name.to_s
+      
+      self.comment_roles = commentable_options[:types].present? ? commentable_options[:types] : [association_comment_name.singularize.to_sym]
       self.comment_model = association_options[:class_name].classify.constantize
-      enable_counter_cache = counter_cache
 
       if comment_roles.size == 1
         ###########################
@@ -51,7 +54,8 @@ module ActsAsCommentableMore
         comment_define_can_change_role_of(association_options[:as])
       end
 
-       # counter cache for comment model
+      # counter cache for comment model
+      enable_counter_cache = commentable_options[:counter_cache]
       comment_define_counter_cache_role(association_comment_name, association_options[:as]) if enable_counter_cache
 
       # instance method for comment
