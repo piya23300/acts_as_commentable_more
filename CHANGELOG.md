@@ -1,5 +1,11 @@
 # Change Log
 
+**1.2.9 (03/07/2015)**
+
+- changed parameters for `acts_as_commentable` setting 
+- refactoring code
+- updated readme
+
 **1.2.8 (02/07/2015)**
 
 - auto merge related_attributes when it's added new attr or update attr
