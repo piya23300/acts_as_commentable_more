@@ -8,7 +8,7 @@ module ActsAsCommentableMore
             aacm_commentable_options[:comment_model]
             .includes(aacm_association_options[:as].to_sym, :user)
             .where(aacm_association_options[:as].to_sym => self)
-            .order(created_at: :desc)
+            .order(aacm_association_options[:order_by])
           end
         end
 

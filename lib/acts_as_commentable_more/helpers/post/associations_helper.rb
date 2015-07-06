@@ -16,13 +16,15 @@ module ActsAsCommentableMore
         end
 
         def define_role_based_inflection_4(role, commantable_name, association_comment_name)
+          order_by_attrs = aacm_association_options[:order_by]
           has_many "#{association_comment_name}".to_sym,
-                   -> { includes(commantable_name, :user).where(role: role) },
+                   -> { includes(commantable_name, :user).where(role: role).order(order_by_attrs) },
                    has_many_options(role)
         end
 
         def has_many_options(role)
-          { before_add: Proc.new { |post, comment| comment.role = role } }.merge(aacm_association_options)
+          association_options = aacm_association_options.except(:order_by)
+          { before_add: Proc.new { |post, comment| comment.role = role } }.merge(association_options)
         end
 
       end

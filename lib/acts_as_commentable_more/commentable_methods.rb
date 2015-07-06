@@ -15,7 +15,7 @@ module ActsAsCommentableMore
       mattr_accessor :aacm_association_options
 
       default_commentable_options = { types: [], options: {}, as: nil, counter_cache: true }
-      default_association_options = { as: :commentable, dependent: :destroy, class_name: 'Comment' }
+      default_association_options = { as: :commentable, dependent: :destroy, class_name: 'Comment', order_by: {} }
 
       self.aacm_commentable_options = default_commentable_options.merge(args.extract_options!)
       self.aacm_association_options = default_association_options.merge(aacm_commentable_options[:options].compact)

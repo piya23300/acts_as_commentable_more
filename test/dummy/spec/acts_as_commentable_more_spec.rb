@@ -264,7 +264,6 @@ RSpec.describe ActsAsCommentableMore do
       expect(comment.related_attributes[:test_1].to_i).to eq 1
       expect(comment.related_attributes[:test_2].to_i).to eq 2
     end
-
   end
 
   describe "setting :as to custom association name" do
@@ -296,7 +295,6 @@ RSpec.describe ActsAsCommentableMore do
       expect{note_custom.creates_public_comments()}.to raise_error(NoMethodError)
       expect{note_custom.creates_private_comments()}.to raise_error(NoMethodError)
     end
-
   end
 
   describe "STI Subclass" do
@@ -411,8 +409,40 @@ RSpec.describe ActsAsCommentableMore do
         expect(@note.private_comments_count).to eq 1
       end
     end
-    
-    
+  end
+
+  describe "association option order by", focus: true do
+    context "none type" do
+      it "correct order by" do
+        topic = create(:topic)
+        comment_1 = topic.custom_comments.create(message: 'a')
+        comment_2 = topic.custom_comments.create(message: 'c')
+        comment_3 = topic.custom_comments.create(message: 'b')
+        comment_4 = topic.custom_comments.create(message: 'z')
+        expect_message = ['a', 'b', 'c', 'z']
+        expect(expect_message).to eq topic.custom_comments.map(&:message)
+      end
+    end
+    context "many type" do
+      let(:note) { @note = create(:note) }
+      it "correct order by" do
+        comment_public_1 = note.public_comments.create(message: 'z')
+        comment_public_2 = note.public_comments.create(message: 'b')
+
+        comment_private_1 = note.private_comments.create(message: 'a')
+        comment_private_2 = note.private_comments.create(message: 'm')
+
+        expect_object = [comment_private_1, comment_public_2, comment_private_2, comment_public_1]
+        expect(note.all_comments).to eq expect_object
+
+        expect_object = [comment_public_2, comment_public_1]
+        expect(note.public_comments).to eq expect_object
+
+        expect_object = [comment_private_1, comment_private_2]
+        expect(note.private_comments).to eq expect_object
+      end
+    end
+
   end
 
 end
