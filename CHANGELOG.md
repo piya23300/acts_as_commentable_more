@@ -1,5 +1,9 @@
 # Change Log
 
+**1.2.10 (06/07/2015)**
+
+- association support order_by option
+
 **1.2.9 (03/07/2015)**
 
 - changed parameters for `acts_as_commentable` setting 
