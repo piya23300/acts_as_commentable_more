@@ -14,7 +14,7 @@ module ActsAsCommentableMore
           order_by_attrs = aacm_association_options[:order_by]
           association_options = aacm_association_options.except(:order_by)
           has_many "#{association_comment_name}".to_sym,
-                   -> { includes(commantable_name, :user).order(order_by_attrs) },
+                   -> { order(order_by_attrs) },
                    association_options
         end
 
@@ -33,7 +33,7 @@ module ActsAsCommentableMore
         def define_role_based_inflection_4(role, commantable_name, association_comment_name)
           order_by_attrs = aacm_association_options[:order_by]
           has_many "#{association_comment_name}".to_sym,
-                   -> { includes(commantable_name, :user).where(role: role).order(order_by_attrs) },
+                   -> { where(role: role).order(order_by_attrs) },
                    has_many_options(role)
         end
 
