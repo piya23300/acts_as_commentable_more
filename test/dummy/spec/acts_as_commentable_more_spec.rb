@@ -109,7 +109,7 @@ RSpec.describe ActsAsCommentableMore do
         other_note = create(:note)
         5.times { |i| other_note.private_comments.create(message: 'private message') }
         
-        expect(note.all_comments.count).to eq 8
+        expect(note.comments.count).to eq 8
       end
 
       it "custom association options" do
@@ -120,14 +120,9 @@ RSpec.describe ActsAsCommentableMore do
         other_letter = create(:letter)
         5.times { |i| other_letter.show_custom_comments.create(message: 'show message') }
         
-        expect(letter.all_custom_comments.count).to eq 13
+        expect(letter.custom_comments.count).to eq 13
       end
       
-    end
-
-    it "doesn't have comments association to get all comment" do
-      note = create(:note)
-      expect{ note.comments }.to raise_error(NoMethodError)
     end
 
     it "gets comment specific role by {role}_comments method" do
@@ -283,13 +278,13 @@ RSpec.describe ActsAsCommentableMore do
 
     it "has roles" do
       note_custom = create(:note_custom_asso_name)
-      expect{note_custom.all_custom_comments}.not_to raise_error
+      expect{note_custom.custom_comments}.not_to raise_error
       expect{note_custom.private_custom_comments}.not_to raise_error
       expect{note_custom.public_custom_comments}.not_to raise_error
       expect{note_custom.creates_public_custom_comments()}.not_to raise_error
       expect{note_custom.creates_private_custom_comments()}.not_to raise_error
 
-      expect{note_custom.all_comments}.to raise_error(NoMethodError)
+      expect{note_custom.comments}.to raise_error(NoMethodError)
       expect{note_custom.private_comments}.to raise_error(NoMethodError)
       expect{note_custom.public_comments()}.to raise_error(NoMethodError)
       expect{note_custom.creates_public_comments()}.to raise_error(NoMethodError)
@@ -433,7 +428,7 @@ RSpec.describe ActsAsCommentableMore do
         comment_private_2 = note.private_comments.create(message: 'm')
 
         expect_object = [comment_private_1, comment_public_2, comment_private_2, comment_public_1]
-        expect(note.all_comments).to eq expect_object
+        expect(note.comments).to eq expect_object
 
         expect_object = [comment_public_2, comment_public_1]
         expect(note.public_comments).to eq expect_object

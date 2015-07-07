@@ -6,7 +6,6 @@ module ActsAsCommentableMore
   module ClassMethods
     include Helpers::Post::AssociationsHelper
     include Helpers::Post::MethodsHelper
-    include Helpers::Post::ScopesHelper
     include Helpers::Comment::CacheCounterHelper
     include Helpers::Comment::InstanceMethodsHelper
 
@@ -40,7 +39,7 @@ module ActsAsCommentableMore
         ### many roles comment  ###
         ###########################
         # scope method for post model
-        post_define_all_scope
+        post_define_based_inflection(aacm_commentable_options[:association_comment_name])
         
         aacm_commentable_options[:comment_roles].each do |role|
           # association for post model

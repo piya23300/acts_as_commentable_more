@@ -5,6 +5,21 @@ module ActsAsCommentableMore
 
         private
 
+        def post_define_based_inflection(association_comment_name)
+          commantable_name = aacm_association_options[:as].to_sym
+          send("define_based_inflection_#{Rails.version.first}", commantable_name, association_comment_name)
+        end
+
+        def define_based_inflection_4(commantable_name, association_comment_name)
+          order_by_attrs = aacm_association_options[:order_by]
+          association_options = aacm_association_options.except(:order_by)
+          has_many "#{association_comment_name}".to_sym,
+                   -> { includes(commantable_name, :user).order(order_by_attrs) },
+                   association_options
+        end
+
+        ##==========================
+        ##==========================
         def post_define_role_based_inflection(role, association_comment_name)
           commantable_name = aacm_association_options[:as].to_sym
           send("define_role_based_inflection_#{Rails.version.first}", role, commantable_name, association_comment_name)
