@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    acts_as_commentable_more (1.2.10)
+    acts_as_commentable_more (1.2.11)
       rails (>= 4.1.8)
 
 GEM

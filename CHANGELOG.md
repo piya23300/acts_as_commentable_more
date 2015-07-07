@@ -1,4 +1,8 @@
 # Change Log
+**1.2.11 (06/07/2015)**
+
+- [removed] auto included association when query by association
+- [change] `all_comments` method to `comments` has_many association
 
 **1.2.10 (06/07/2015)**
 
